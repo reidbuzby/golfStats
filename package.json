@@ -1,0 +1,27 @@
+{
+  "name": "golf-stats",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Describe your project",
+  "engines": {
+    "node": "8.9.x"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"npm run watch --prefix server\" \"npm start --prefix client\"",
+    "postinstall": "npm install --prefix client && npm install --prefix server",
+    "heroku-postbuild": "npm install --prefix client && npm install --only=dev --no-shrinkwrap --prefix client && npm run build --prefix client && npm install --prefix server"
+  },
+  "cacheDirectories": [
+    "client/node_modules",
+    "server/node_modules"
+  ],
+  "keywords": [],
+  "contributors": [
+    "Reid Buzby <rbuzby@middlebury.edu>"
+  ],
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "concurrently": "^3.5.1"
+  }
+}
