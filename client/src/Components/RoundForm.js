@@ -53,6 +53,7 @@ class RoundForm extends Component {
 
   handlePutts(e) {
     this.setState({ putts: e.target.value });
+    console.log(this.state.putts);
   }
 
   render() {
@@ -144,6 +145,7 @@ class RoundForm extends Component {
           controlId="formBasicText"
           validationState={this.getValidationState()}
         >
+          <ControlLabel>How many putts did you hit? </ControlLabel>
           <FormControl
             type="text"
             value={this.state.putts}
