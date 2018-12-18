@@ -9,7 +9,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <LoginMain />
+        <ViewContainer />
       </div>
     );
   }

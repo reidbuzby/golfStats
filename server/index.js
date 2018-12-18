@@ -4,7 +4,7 @@ const url = require('url');
 const { MongoClient } = require('mongodb');
 const { server, setDb } = require('./server');
 
-const mongoURL = 'mongodb://heroku_5cvwqv6q:0Y1182ggb4T9ASMt3YrZBmgXJL6GUQDF@ds143778.mlab.com:43778/heroku_5cvwqv6q'
+const mongoURL = 'mongodb://heroku_5cvwqv6q:ksghe2u05vt8ehv9t4k03avdhk@ds143778.mlab.com:43778/heroku_5cvwqv6q'
 
 MongoClient.connect(mongoURL, (err, database) => {
   if (err) {

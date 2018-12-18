@@ -22,7 +22,18 @@ class LoginMain extends Component {
   }
 
   handleLogin() {
-    console.log('login');
+    /*
+    ADD AUTHENTICATION HERE
+    */
+
+    // TODO if auth succeeds and user is coach
+    if (this.state.user === 'coach') {
+      this.props.updateViewCallback('coach-view');
+    }
+    // TODO if auth succeeds and user is player
+    else {
+      this.props.updateViewCallback('player-view');
+    }
   }
 
   updatePassword(val) {
@@ -47,11 +58,6 @@ class LoginMain extends Component {
 
     const loginMain = (
       <div>
-        <header>
-          <h1>
-          Golf Stats
-          </h1>
-        </header>
         <text>Are you a: </text>
         <ButtonGroup>
           <Button
