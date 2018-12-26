@@ -11,9 +11,24 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Accept', 'X-Requested-With', 'Origin'],
 };
 
-
 server.use(cors(corsOptions));
 server.use(bodyParser.json());
+
+// POST request to create new coach account
+server.post('/coaches', (request, response, next) => {
+  const newRequest = Object.assign(request.body);
+  db.collection('coaches').insertOne(newRequest).then((result) => { // eslint-disable-line no-undef
+    response.send(result.ops[0]);
+  }, next);
+});
+
+// POST request to create a new player account
+server.post('/players', (request, response, next) => {
+  const newRequest = Object.assign(request.body);
+  db.collection('players').insertOne(newRequest).then((result) => { // eslint-disable-line no-undef
+    response.send(result.ops[0]);
+  }, next);
+});
 
 // express only serves static assets in production
 if (process.env.NODE_ENV === 'production') {

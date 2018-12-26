@@ -3,6 +3,8 @@ import { FormGroup, FormControl, ControlLabel, Button, ButtonGroup, HelpBlock } 
 
 class LoginMain extends Component {
 
+  // PROPS:
+  // updateViewCallback() -- funciton to tell ViewContainer what state to be in after login
   constructor(props) {
     super(props);
 
@@ -10,6 +12,16 @@ class LoginMain extends Component {
       user: null,
       email: null,
       password: null
+    }
+  }
+
+  handleNewUser() {
+    if (this.state.user === 'coach') {
+      this.props.updateViewCallback('create-new-coach');
+    }
+    // TODO if auth succeeds and user is player
+    else if (this.state.user === 'player') {
+      this.props.updateViewCallback('create-new-player');
     }
   }
 
@@ -31,7 +43,7 @@ class LoginMain extends Component {
       this.props.updateViewCallback('coach-view');
     }
     // TODO if auth succeeds and user is player
-    else {
+    else if (this.state.user === 'player') {
       this.props.updateViewCallback('player-view');
     }
   }
@@ -96,6 +108,9 @@ class LoginMain extends Component {
           onClick={() => this.handleLogin()}
           disabled={!(this.state.email != null && this.state.password != null)}>
           Submit
+        </Button>
+        <Button onClick={() => this.handleNewUser()}>
+          Create new user
         </Button>
       </form>
     );

@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import OpeningScreen from './OpeningScreen';
 import RoundFormContainer from './RoundFormContainer';
 import LoginMain from '../login/LoginMain';
+import CoachViewContainer from '../coach/CoachViewContainer';
+import PlayerViewContainer from '../player/PlayerViewContainer';
+import CreateNewUser from '../login/CreateNewUser';
 
 class ViewContainer extends Component {
 
@@ -39,19 +42,37 @@ class ViewContainer extends Component {
       <div>
         <header>
           <h1>Golf Stats</h1>
-          <h2>Coach</h2>
         </header>
+        <CoachViewContainer coachName='beaney'/>
       </div>
-    )
+    );
 
     const playerView = (
       <div>
         <header>
           <h1>Golf Stats</h1>
-          <h2>Player</h2>
         </header>
+        <PlayerViewContainer playerName='reid'/>
       </div>
-    )
+    );
+
+    const createNewCoach = (
+      <div>
+        <header>
+          <h1>Golf Stats</h1>
+        </header>
+        <CreateNewUser userType='coach'/>
+      </div>
+    );
+
+    const createNewPlayer = (
+      <div>
+        <header>
+          <h1>Golf Stats</h1>
+        </header>
+        <CreateNewUser userType='player'/>
+      </div>
+    );
 
     switch (this.state.viewMode) {
       case 'login':
@@ -62,6 +83,13 @@ class ViewContainer extends Component {
 
       case 'player-view':
         return playerView;
+
+      case 'create-new-coach':
+        return createNewCoach;
+
+      case 'create-new-player':
+        return createNewPlayer;
+
     }
     // if (this.state.viewMode === "Intro") {
     //   return (
