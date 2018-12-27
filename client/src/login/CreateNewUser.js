@@ -6,6 +6,8 @@ class CreateNewUser extends Component {
 
   // PROPS:
   // userType -- either 'player' or 'coach', tells form what to look like
+  // successCallback -- callback to ViewContainer when a new user is successfully created,
+  //                    takes the uid of the new user and the user type
   constructor(props) {
     super(props)
 
@@ -84,6 +86,8 @@ class CreateNewUser extends Component {
     if (this.state.password === this.state.confirmPassword) {
       fetchHelper('/coaches', 'POST', newCoach).then((createdCoach) => {
         console.log('Created new coach', createdCoach);
+        const uid = createdCoach._id;
+        this.props.successCallback(uid, 'coach');
       }).catch(err => console.log(err)); // eslint-disable-line no-console
     }
     else {
@@ -102,6 +106,8 @@ class CreateNewUser extends Component {
     if (this.state.password === this.state.confirmPassword) {
       fetchHelper('/players', 'POST', newPlayer).then((createdPlayer) => {
         console.log('Created new player', createdPlayer);
+        const uid = createdPlayer._id;
+        this.props.successCallback(uid, 'player');
       }).catch(err => console.log(err)); // eslint-disable-line no-console
     }
     else {

@@ -30,6 +30,43 @@ server.post('/players', (request, response, next) => {
   }, next);
 });
 
+// GET request to authenticate a player user for login. Route is by email
+server.get('/players/:email/:password', (request, response, next) => {
+  const query = { email: request.params.email };
+  db.collection('players').find(query).toArray().then((documents) => { // eslint-disable-line no-undef
+    let found = false;
+    for (let i = 0; i < documents.length; i++) {
+      if (documents[i].password === request.params.password) {
+        response.send(documents[i]);
+        found = true;
+      }
+    }
+    if (!found) {
+      response.sendStatus(401);
+    }
+  }, next);
+});
+
+// GET request to authenticate a coach user for login. Route is by email
+server.get('/coaches/:email/:password', (request, response, next) => {
+  const query = { email: request.params.email };
+  db.collection('coaches').find(query).toArray().then((documents) => { // eslint-disable-line no-undef
+    let found = false;
+    for (let i = 0; i < documents.length; i++) {
+      if (documents[i].password === request.params.password) {
+        response.send(documents[i]);
+        found = true;
+      }
+    }
+    if (!found) {
+      response.sendStatus(401);
+    }
+  }, next);
+});
+
+
+
+
 // express only serves static assets in production
 if (process.env.NODE_ENV === 'production') {
   // Resolve client build directory as absolute path to avoid errors in express

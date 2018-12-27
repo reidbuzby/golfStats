@@ -5,7 +5,7 @@ import StatsTable from '../Components/StatsTable';
 class CoachViewContainer extends Component {
 
   // PROPS:
-  // coachName -- the UID or name of the coach to display the view for
+  // coachID -- the UID of the coach to display the view for
   constructor(props) {
     super(props);
 
@@ -48,7 +48,7 @@ class CoachViewContainer extends Component {
             <Grid>
               <Row>
                 <Col md={8}>
-                  <StatsTable whoAmI='coach' coachName={this.props.coachName}/>
+                  <StatsTable whoAmI='coach' coachID={this.props.coachID}/>
                 </Col>
                 <Col md={4}>
                   {buttons}

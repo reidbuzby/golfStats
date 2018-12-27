@@ -12,11 +12,13 @@ class ViewContainer extends Component {
     super(props);
 
     this.state = {
-      viewMode: 'login'
+      viewMode: 'login',
+      userId: null
     };
 
     // this.inputRoundCallback = this.inputRoundCallback.bind(this);
     this.updateViewCallback = this.updateViewCallback.bind(this);
+    this.successCallback = this.successCallback.bind(this);
   }
 
   // inputRoundCallback() {
@@ -25,6 +27,17 @@ class ViewContainer extends Component {
 
   updateViewCallback(view) {
     this.setState({ viewMode : view });
+  }
+
+  successCallback(uid, userType) {
+    if (userType === 'player') {
+      this.setState({ viewMode : 'player-view', userId : uid});
+      console.log('uid:', uid)
+    }
+    else if (userType === 'coach') {
+      this.setState({ viewMode : 'coach-view', userId : uid});
+      console.log('uid:', uid)
+    }
   }
 
   render() {
@@ -43,7 +56,7 @@ class ViewContainer extends Component {
         <header>
           <h1>Golf Stats</h1>
         </header>
-        <CoachViewContainer coachName='beaney'/>
+        <CoachViewContainer coachUID={this.state.userID}/>
       </div>
     );
 
@@ -52,7 +65,7 @@ class ViewContainer extends Component {
         <header>
           <h1>Golf Stats</h1>
         </header>
-        <PlayerViewContainer playerName='reid'/>
+        <PlayerViewContainer playerUID={this.state.userID}/>
       </div>
     );
 
@@ -61,7 +74,7 @@ class ViewContainer extends Component {
         <header>
           <h1>Golf Stats</h1>
         </header>
-        <CreateNewUser userType='coach'/>
+        <CreateNewUser userType='coach' successCallback={this.successCallback}/>
       </div>
     );
 
@@ -70,7 +83,7 @@ class ViewContainer extends Component {
         <header>
           <h1>Golf Stats</h1>
         </header>
-        <CreateNewUser userType='player'/>
+        <CreateNewUser userType='player' successCallback={this.successCallback}/>
       </div>
     );
 

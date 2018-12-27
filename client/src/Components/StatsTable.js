@@ -16,8 +16,8 @@ class StatsTable extends Component {
 
   // PROPS:
   // whoAmI -- whether the user is a coach or player either 'player' or 'coach'
-  // playerName -- OPTIONAL: UID or name of the player, if a player table is to be displayed. Undefined if showing coach table
-  // coachName -- OPTIONAL: UID or name of the coach, if a coach table is to be displayed. Undefined if showing player table
+  // playerID -- OPTIONAL: UID of the player, if a player table is to be displayed. Undefined if showing coach table
+  // coachID -- OPTIONAL: UID of the coach, if a coach table is to be displayed. Undefined if showing player table
   constructor(props) {
     super(props);
 
@@ -103,7 +103,7 @@ class StatsTable extends Component {
           </tr>
         </thead>
         <tbody>
-          {this.generateCoachRows(this.props.coachName)}
+          {this.generateCoachRows(this.props.coachID)}
         </tbody>
       </Table>
     );
@@ -119,7 +119,7 @@ class StatsTable extends Component {
           </tr>
         </thead>
         <tbody>
-          {this.generatePlayerRows(this.props.playerName)}
+          {this.generatePlayerRows(this.props.playerID)}
         </tbody>
       </Table>
     );

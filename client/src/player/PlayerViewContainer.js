@@ -4,7 +4,7 @@ import StatsTable from '../Components/StatsTable';
 class PlayerViewContainer extends Component {
 
   // PROPS:
-  // playerName -- the UID or name of the player to display
+  // playerID -- the UID of the player to display
   constructor(props) {
     super(props)
   }
@@ -12,7 +12,7 @@ class PlayerViewContainer extends Component {
   render() {
     return (
       <div>
-        <StatsTable whoAmI='player' playerName={this.props.playerName}/>
+        <StatsTable whoAmI='player' playerID={this.props.playerID}/>
       </div>
     );
   }

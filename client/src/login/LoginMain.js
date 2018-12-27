@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { FormGroup, FormControl, ControlLabel, Button, ButtonGroup, HelpBlock } from 'react-bootstrap';
+import fetchHelper from '../serverHelpers/FetchHelper';
 
 class LoginMain extends Component {
 
@@ -34,17 +35,52 @@ class LoginMain extends Component {
   }
 
   handleLogin() {
-    /*
-    ADD AUTHENTICATION HERE
-    */
-
-    // TODO if auth succeeds and user is coach
-    if (this.state.user === 'coach') {
-      this.props.updateViewCallback('coach-view');
+    const userObj = {
+      email: this.state.email,
+      password: this.state.password
     }
-    // TODO if auth succeeds and user is player
-    else if (this.state.user === 'player') {
-      this.props.updateViewCallback('player-view');
+
+    if (this.state.user === 'player') {
+      fetch(`players/${this.state.email}/${this.state.password}`, {
+        method: 'GET',
+        headers: new Headers({
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        }),
+      }).then((response) => {
+        if (!response.ok) {
+          alert('Email or Password is incorrect')
+        }
+        else {
+          // Validation succeeds
+          // TODO: send back coach information in callback for future use
+          console.log(response);
+          this.props.updateViewCallback('player-view');
+        }
+      }).catch(err => console.log(err));
+
+
+    }
+    else if (this.state.user === 'coach') {
+      fetch(`coaches/${this.state.email}/${this.state.password}`, {
+        method: 'GET',
+        headers: new Headers({
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        }),
+      }).then((response) => {
+        if (!response.ok) {
+          alert('Email or Password is incorrect')
+        }
+        else {
+          // Validation succeeds
+          // TODO: send back player information in callback for future use
+          console.log(response)
+          this.props.updateViewCallback('coach-view');
+        }
+      }).catch(err => console.log(err));
+
+
     }
   }
 
@@ -107,7 +143,7 @@ class LoginMain extends Component {
         <Button
           onClick={() => this.handleLogin()}
           disabled={!(this.state.email != null && this.state.password != null)}>
-          Submit
+          Login
         </Button>
         <Button onClick={() => this.handleNewUser()}>
           Create new user
