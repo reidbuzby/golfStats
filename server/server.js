@@ -30,6 +30,38 @@ server.post('/players', (request, response, next) => {
   }, next);
 });
 
+// POST request to create a new team
+server.post('/teams', (request, response, next) => {
+  const newRequest = Object.assign(request.body);
+  db.collection('teams').insertOne(newRequest).then((result) => {
+    response.send(result.ops[0]);
+  }, next);
+})
+
+// PUT request to add player id to linked team
+server.put('/teams/:teamName', (request, response, next) => {
+  const newID = Object.assign(request.body);
+  db.collection('teams').findOne({ teamName: request.params.teamName })
+    .then((result) => {
+      const playersList = result.players;
+      playersList.push(newID.playerID);
+      console.log('playersList', playersList);
+      console.log('playerID', newID.playerID);
+      console.log('newPlayersList', playersList);
+
+      db.collection('teams') // eslint-disable-line no-undef
+        .findOneAndUpdate(
+          { teamName: request.params.teamName },
+          { $set: { players: playersList } },
+          { returnOriginal: false },
+        )
+        .then((result) => {
+          response.send(result.value);
+        }, next);
+    }, next);
+
+});
+
 // GET request to authenticate a player user for login. Route is by email
 server.get('/players/:email/:password', (request, response, next) => {
   const query = { email: request.params.email };

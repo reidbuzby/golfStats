@@ -75,6 +75,7 @@ class CreateNewUser extends Component {
     }
   }
 
+  // Creates new coach in server, creates new team linked to coach id
   handleNewCoach() {
     const newCoach = {
       fullName : this.state.fullName,
@@ -87,6 +88,17 @@ class CreateNewUser extends Component {
       fetchHelper('/coaches', 'POST', newCoach).then((createdCoach) => {
         console.log('Created new coach', createdCoach);
         const uid = createdCoach._id;
+
+        const newTeam = {
+          coachID : uid,
+          teamName : createdCoach.teamName,
+          players : []
+        }
+
+        fetchHelper('/teams', 'POST', newTeam).then((createdTeam) => {
+          console.log('Created new team', createdTeam);
+        }).catch(err => console.log(err));
+
         this.props.successCallback(uid, 'coach');
       }).catch(err => console.log(err)); // eslint-disable-line no-console
     }
@@ -100,13 +112,17 @@ class CreateNewUser extends Component {
       fullName : this.state.fullName,
       email : this.state.email,
       playerTeam : this.state.playerTeam,
-      password : this.state.password,
+      password : this.state.password
     }
 
     if (this.state.password === this.state.confirmPassword) {
       fetchHelper('/players', 'POST', newPlayer).then((createdPlayer) => {
-        console.log('Created new player', createdPlayer);
         const uid = createdPlayer._id;
+        const newID = { playerID: uid };
+        fetchHelper(`/teams/${newPlayer.playerTeam}`, 'PUT', newID).then((added) => {
+          console.log('Created new player and linked player to their team');
+        }).catch(err => console.log(err)); // eslint-disable-line no-console
+
         this.props.successCallback(uid, 'player');
       }).catch(err => console.log(err)); // eslint-disable-line no-console
     }
