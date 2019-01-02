@@ -1,173 +1,89 @@
 import React, { Component } from 'react';
-import { FormGroup, FormControl, ControlLabel, Button, ButtonGroup, HelpBlock } from 'react-bootstrap';
+import HoleForm from '../Components/HoleForm';
 
 class RoundForm extends Component {
 
+  // PROPS:
+  // updateViewCallback -- tells the ViewContainer what to display
   constructor(props) {
     super(props);
 
     this.state = {
       hole: 1,
-      fairways: "",
-      greens: "",
-      upAndDowns: "",
-      showUpAndDowns: false,
-      putts: '',
+      data: require('../classes/BlankRound.json')
     };
 
-    this.handleGreens = this.handleGreens.bind(this);
-    this.handlePutts = this.handlePutts.bind(this);
+    console.log(this.state.data);
+
+    this.nextHoleUpdate = this.nextHoleUpdate.bind(this);
+    this.previousHoleUpdate = this.previousHoleUpdate.bind(this);
+
   }
 
-  handleFairways(value) {
-    this.setState( { fairways: value.target.value });
+  nextHoleUpdate(holeData) {
+    const currentHoleDataCopy = this.state.data.data[this.state.hole - 1];
+
+    console.log('hole data: ', holeData.puttsLength);
+
+    currentHoleDataCopy.teeShot = holeData.teeShot;
+    currentHoleDataCopy.approachShot = holeData.approachShot;
+    currentHoleDataCopy.upAndDown = holeData.upAndDown;
+    currentHoleDataCopy.putts = holeData.putts;
+    currentHoleDataCopy.puttsLength = holeData.puttsLength;
+    currentHoleDataCopy.score = holeData.score;
+
+    const dataCopy = this.state.data;
+    dataCopy.data[this.state.hole - 1] = currentHoleDataCopy;
+
+    console.log(this.state.data);
+
+    this.setState({ data: dataCopy, hole: this.state.hole + 1 });
   }
 
-  handleUpAndDowns(value) {
-    this.setState( { upAndDowns: value });
-  }
+  previousHoleUpdate(holeData) {
+    const currentHoleDataCopy = this.state.data.data[this.state.hole - 1];
 
-  handleGreens(value) {
-    const newGreensState = value.target.value;
-    this.setState( { greens: newGreensState });
-    if (newGreensState === "Missed") {
-      this.setState({ showUpAndDowns: true });
-    }
-    else {
-      this.setState({ showUpAndDowns: false });
-    }
-  }
+    console.log('hole data: ', holeData.puttsLength);
 
-  getValidationState() {
-    if (Number.isInteger(this.state.putts) && (this.state.putts < 101 && this.state.putts > 0)) {
-      return 'success';
-    }
-    else if (Number.isInteger(this.state.putss) && (this.state.putts > 100 || this.state.putss < 0)) {
-      return 'warning';
-    }
-    else {
-      return 'error';
-    }
-    return null;
-  }
+    currentHoleDataCopy.teeShot = holeData.teeShot;
+    currentHoleDataCopy.approachShot = holeData.approachShot;
+    currentHoleDataCopy.upAndDown = holeData.upAndDown;
+    currentHoleDataCopy.putts = holeData.putts;
+    currentHoleDataCopy.puttsLength = holeData.puttsLength;
+    currentHoleDataCopy.score = holeData.score;
 
-  handlePutts(e) {
-    this.setState({ putts: e.target.value });
-    console.log(this.state.putts);
+    const dataCopy = this.state.data;
+    dataCopy.data[this.state.hole - 1] = currentHoleDataCopy;
+
+    this.setState({ data: dataCopy, hole: this.state.hole - 1 });
   }
 
   render() {
 
-    const fairwayGreenOptions = ["Hit", "Missed"];
-
-    const fairwayGreenOptionsMap = fairwayGreenOptions.map(opt => (
-      <option value={opt}>{opt}</option>
-    ));
-
-    const upAndDownOptions = ["Yes", "No"];
-
-    const upAndDownOptionsMap = upAndDownOptions.map(opt => (
-      <option value={opt}>{opt}</option>
-    ));
-
-    const fairways = (
-      <FormGroup controlId="fairways">
-        <ControlLabel>Where did your tee shot go? </ControlLabel>
-          <ButtonGroup>
-            <Button
-              bsStyle="success"
-              value="fairway"
-              onClick={(val) => this.handleFairways(val)}>
-              Fairway
-            </Button>
-            <Button
-              bsStyle="primary"
-              value="rough"
-              onClick={(val) => this.handleFairways(val)}>
-              Rough
-            </Button>
-            <Button
-              bsStyle="warning"
-              value="trees"
-              onClick={(val) => this.handleFairways(val)}>
-              Trees
-            </Button>
-            <Button
-              bsStyle="warning"
-              value="sand"
-              onClick={(val) => this.handleFairways(val)}>
-              Sand
-            </Button>
-            <Button
-              bsStyle="danger"
-              value="hazard"
-              onClick={(val) => this.handleFairways(val)}>
-              Hazard
-            </Button>
-            <Button
-              bsStyle="danger"
-              value="O.B."
-              onClick={(val) => this.handleFairways(val)}>
-              O.B.
-            </Button>
-          </ButtonGroup>
-      </FormGroup>);
-
-    const greens = (
-      <FormGroup controlId="greens">
-        <ControlLabel>Did you hit the green? </ControlLabel>
-        <FormControl
-          componentClass="select"
-          value={this.state.greens}
-          onChange={(val) => this.handleGreens(val)}
-        >
-          <option value="" disabled hidden>Choose</option>
-          {fairwayGreenOptionsMap}
-        </FormControl>
-      </FormGroup>);
-
-    const upAndDowns = (
-      <FormGroup controlId="upAndDowns">
-        <ControlLabel>Did you get up and down? </ControlLabel>
-        <FormControl
-          componentClass="select"
-          value={this.state.upAndDowns}
-          onChange={(val) => this.handleUpAndDowns(val)}
-        >
-          <option value="" disabled hidden>Choose</option>
-          {upAndDownOptionsMap}
-        </FormControl>
-      </FormGroup>);
-
-    const puttBox = (
-      <form>
-        <FormGroup
-          controlId="formBasicText"
-          validationState={this.getValidationState()}
-        >
-          <ControlLabel>How many putts did you hit? </ControlLabel>
-          <FormControl
-            type="text"
-            value={this.state.putts}
-            placeholder="Enter text"
-            onChange={this.handlePutts}
-          />
-          <FormControl.Feedback />
-          <HelpBlock>Input must be a number between 1 and 100</HelpBlock>
-        </FormGroup>
-      </form>);
+    let holeForm = (
+      <HoleForm
+        sendDataCallbackNext={this.nextHoleUpdate}
+        sendDataCallbackPrevious={this.previousHoleUpdate}
+        hole={this.state.hole}
+        score={this.state.data.data[this.state.hole - 1].score}
+        teeShot={this.state.data.data[this.state.hole - 1].teeShot}
+        approachShot={this.state.data.data[this.state.hole - 1].approachShot}
+        upAndDown={this.state.data.data[this.state.hole - 1].upAndDown}
+        putts={this.state.data.data[this.state.hole - 1].putts}
+        putt1={this.state.data.data[this.state.hole - 1].puttsLength[0]}
+        putt2={this.state.data.data[this.state.hole - 1].puttsLength[1]}
+        putt3={this.state.data.data[this.state.hole - 1].puttsLength[2]}
+        putt4={this.state.data.data[this.state.hole - 1].puttsLength[3]}
+        putt5={this.state.data.data[this.state.hole - 1].puttsLength[4]}
+      />
+    );
 
     return (
       <div>
         <header>
           <h1>Hole {this.state.hole}</h1>
         </header>
-        <form>
-          {fairways}
-          {greens}
-          {this.state.showUpAndDowns ? upAndDowns : null}
-          {puttBox}
-        </form>
+        {holeForm}
       </div>
     );
   }

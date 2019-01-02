@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import OpeningScreen from './OpeningScreen';
-import RoundFormContainer from './RoundFormContainer';
 import LoginMain from '../login/LoginMain';
 import CoachViewContainer from '../coach/CoachViewContainer';
 import PlayerViewContainer from '../player/PlayerViewContainer';
 import CreateNewUser from '../login/CreateNewUser';
+import RoundForm from '../Components/RoundForm';
 
 class ViewContainer extends Component {
 
@@ -21,10 +20,6 @@ class ViewContainer extends Component {
     this.successCallback = this.successCallback.bind(this);
   }
 
-  // inputRoundCallback() {
-  //   this.setState( {viewMode: "InputRound"} );
-  // }
-
   updateViewCallback(view) {
     this.setState({ viewMode : view });
   }
@@ -40,7 +35,20 @@ class ViewContainer extends Component {
     }
   }
 
+  roundSuccessCallback() {
+
+  }
+
   render() {
+
+    const roundForm = (
+      <div>
+        <header>
+          <h1>Golf Stats</h1>
+        </header>
+        <RoundForm roundSuccessCallback={this.roundSuccessCallback}/>
+      </div>
+    );
 
     const loginScreen = (
       <div>
@@ -65,7 +73,7 @@ class ViewContainer extends Component {
         <header>
           <h1>Golf Stats</h1>
         </header>
-        <PlayerViewContainer playerUID={this.state.userID}/>
+        <PlayerViewContainer playerUID={this.state.userID} updateViewCallback={this.updateViewCallback}/>
       </div>
     );
 
@@ -102,6 +110,9 @@ class ViewContainer extends Component {
 
       case 'create-new-player':
         return createNewPlayer;
+
+      case 'input-new-round':
+        return roundForm;
 
     }
     // if (this.state.viewMode === "Intro") {
