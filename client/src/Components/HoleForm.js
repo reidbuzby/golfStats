@@ -9,7 +9,7 @@ class HoleForm extends Component {
   // PROPS:
   // sendDataCallbackNext() -- callback function when hitting next hole, sends hole data back to container
   // sendDataCallbackPrevious() -- callback function when hitting previous hole, sends hole data back to container
-  // hole -- current hole number
+  // the entire state is passed as props to ensure previously saved round data can be accessed
   constructor(props) {
     super(props);
 
@@ -27,9 +27,8 @@ class HoleForm extends Component {
       putt5: this.props.putt5
     };
 
-    console.log(this.state);
-
     this.handleTeeShotChange = this.handleTeeShotChange.bind(this);
+    this.handleScoreChange = this.handleScoreChange.bind(this);
     this.handleApproachShotChange = this.handleApproachShotChange.bind(this);
     this.handleUpAndDownChange = this.handleUpAndDownChange.bind(this);
     this.handlePuttChange = this.handlePuttChange.bind(this);
@@ -54,7 +53,10 @@ class HoleForm extends Component {
       putt4: props.putt4,
       putt5: props.putt5
     });
-    console.log(this.state);
+  }
+
+  handleScoreChange(e) {
+    this.setState({ score: e.target.value });
   }
 
   handleTeeShotChange(e) {
@@ -168,24 +170,21 @@ class HoleForm extends Component {
 
     switch (this.state.putts) {
       case 1:
-        holeData.puttsLength = [this.state.putt1, null, null, null, null];
+        holeData.puttsLength = [(this.state.putt1 === null) ? 1 : this.state.putt1, null, null, null, null];
         break;
       case 2:
-        console.log('here');
-        console.log(this.state.putt1, this.state.putt2);
-        holeData.puttsLength = [this.state.putt1, this.state.putt2, null, null, null]
+        holeData.puttsLength = [this.state.putt1, (this.state.putt2 === null) ? 1 : this.state.putt2, null, null, null]
         break;
       case 3:
-        holeData.puttsLength = [this.state.putt1, this.state.putt2, this.state.putt3, null, null];
+        holeData.puttsLength = [this.state.putt1, this.state.putt2, (this.state.putt3 === null) ? 1 : this.state.putt3, null, null];
         break;
       case 4:
-        holeData.puttsLength = [this.state.putt1, this.state.putt2, this.state.putt3, this.state.putt4, null]
+        holeData.puttsLength = [this.state.putt1, this.state.putt2, this.state.putt3, (this.state.putt4 === null) ? 1 : this.state.putt4, null]
         break;
       case 5:
-        holeData.puttsLength = [this.state.putt1, this.state.putt2, this.state.putt3, this.state.putt4, this.state.putt5]
+        holeData.puttsLength = [this.state.putt1, this.state.putt2, this.state.putt3, this.state.putt4, (this.state.putt5 === null) ? 1 : this.state.putt5]
         break;
       default:
-        console.log('here2')
         holeData.puttsLength = [null, null, null, null, null];
         break;
     }
@@ -204,19 +203,19 @@ class HoleForm extends Component {
 
     switch (this.state.putts) {
       case 1:
-        holeData.puttsLength = [this.state.putt1, null, null, null, null];
+        holeData.puttsLength = [(this.state.putt1 === null) ? 1 : this.state.putt1, null, null, null, null];
         break;
       case 2:
-        holeData.puttsLength = [this.state.putt1, this.state.putt2, null, null, null]
+        holeData.puttsLength = [this.state.putt1, (this.state.putt2 === null) ? 1 : this.state.putt2, null, null, null]
         break;
       case 3:
-        holeData.puttsLength = [this.state.putt1, this.state.putt2, this.state.putt3, null, null];
+        holeData.puttsLength = [this.state.putt1, this.state.putt2, (this.state.putt3 === null) ? 1 : this.state.putt3, null, null];
         break;
       case 4:
-        holeData.puttsLength = [this.state.putt1, this.state.putt2, this.state.putt3, this.state.putt4, null]
+        holeData.puttsLength = [this.state.putt1, this.state.putt2, this.state.putt3, (this.state.putt4 === null) ? 1 : this.state.putt4, null]
         break;
       case 5:
-        holeData.puttsLength = [this.state.putt1, this.state.putt2, this.state.putt3, this.state.putt4, this.state.putt5]
+        holeData.puttsLength = [this.state.putt1, this.state.putt2, this.state.putt3, this.state.putt4, (this.state.putt5 === null) ? 1 : this.state.putt5]
         break;
       default:
         holeData.puttsLength = [null, null, null, null, null];
@@ -226,8 +225,88 @@ class HoleForm extends Component {
     this.props.sendDataCallbackPrevious(holeData);
   }
 
+  submitRound() {
+    const holeData = {};
+
+    holeData.teeShot = this.state.teeShot;
+    holeData.approachShot = this.state.approachShot;
+    holeData.upAndDown = this.state.upAndDown;
+    holeData.putts = this.state.putts;
+    holeData.score = this.state.score;
+
+    switch (this.state.putts) {
+      case 1:
+        holeData.puttsLength = [(this.state.putt1 === null) ? 1 : this.state.putt1, null, null, null, null];
+        break;
+      case 2:
+        holeData.puttsLength = [this.state.putt1, (this.state.putt2 === null) ? 1 : this.state.putt2, null, null, null]
+        break;
+      case 3:
+        holeData.puttsLength = [this.state.putt1, this.state.putt2, (this.state.putt3 === null) ? 1 : this.state.putt3, null, null];
+        break;
+      case 4:
+        holeData.puttsLength = [this.state.putt1, this.state.putt2, this.state.putt3, (this.state.putt4 === null) ? 1 : this.state.putt4, null]
+        break;
+      case 5:
+        holeData.puttsLength = [this.state.putt1, this.state.putt2, this.state.putt3, this.state.putt4, (this.state.putt5 === null) ? 1 : this.state.putt5]
+        break;
+      default:
+        holeData.puttsLength = [null, null, null, null, null];
+        break;
+    }
+
+    this.props.submitRoundCallback(holeData);
+  }
+
+  validation() {
+    if (this.state.score === "") {
+      return false;
+    }
+    if (this.state.teeShot === null) {
+      return false;
+    }
+    if (this.state.approachShot === null) {
+      return false;
+    }
+    if (this.state.approachShot !== 'green' && this.state.upAndDown === null) {
+      return false;
+    }
+    if (this.state.putts === null) {
+      return false;
+    }
+    if (this.checkPutts()) {
+      return false;
+    }
+    return true;
+  }
+
+  checkPutts() {
+      if (this.state.putt1 === null && this.state.putt2 === null && this.state.putt3 === null && this.state.putt4 === null && this.state.putt5 === null) {
+        if (this.state.putts === 1) {
+          return false;
+        }
+        return true;
+      }
+      else {
+        return false;
+      }
+  }
+
 
   render() {
+
+    const scoreInput = (
+      <div>
+        <ControlLabel>What score did you make?</ControlLabel>
+        <FormControl
+          type="text"
+          value={this.state.score}
+          placeholder="Enter score"
+          onChange={this.handleScoreChange}
+          style={{ width: 100, marginLeft: 460 }}
+        />
+      </div>
+    );
 
     const teeShotButtons = (
       <div style={{ 'marginBottom': 30}}>
@@ -346,20 +425,31 @@ class HoleForm extends Component {
       </div>
     );
 
+    const nextButton = (
+      <Button value="next" disabled={(this.state.hole === 18) || !(this.validation())} onClick={() => this.nextHole()} >
+        Next hole
+      </Button>
+    );
+
+    const submitButton = (
+      <Button value="submit" disabled={!(this.validation())} onClick={() => this.submitRound()} >
+        Submit
+      </Button>
+    );
+
     const navigationButtons = (
       <div>
         <Button value="previous" disabled={(this.state.hole === 1)} onClick={() => this.previousHole()}>
           Previous hole
         </Button>
-        <Button value="next" disabled={(this.state.hole === 18)} onClick={() => this.nextHole()} >
-          Next hole
-        </Button>
+        {(this.state.hole === 18) ? submitButton : nextButton}
       </div>
     );
 
     return (
       <div>
         <Jumbotron>
+          {scoreInput}
           {teeShotButtons}
           {approachButtons}
           {(this.state.approachShot === "green" || this.state.approachShot === null) ? null : upAndDownButtons}
