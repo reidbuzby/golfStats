@@ -14,7 +14,7 @@ class RoundForm extends Component {
     super(props);
 
     this.state = {
-      hole: 17,
+      hole: 1,
       data: require('../classes/BlankRound.json')
     };
 
