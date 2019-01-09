@@ -5,7 +5,8 @@ import fetchHelper from '../serverHelpers/FetchHelper';
 class LoginMain extends Component {
 
   // PROPS:
-  // updateViewCallback() -- funciton to tell ViewContainer what state to be in after login
+  // updateViewCallback() -- funciton to tell ViewContainer what state to be in after login POSSIBLY DONT NEED BECAUSE FUNCTION BELOW HANDLES
+  // loginSuccessCallback() -- function to tell ViewContainer what state to be in after login and send user info back to ViewContainer
   constructor(props) {
     super(props);
 
@@ -53,14 +54,17 @@ class LoginMain extends Component {
         }
         else {
           // Validation succeeds
-          // TODO: send back coach information in callback for future use
-          console.log(response);
-          this.props.updateViewCallback('player-view');
+          // TODO: send back player information in callback for future use
+          return response.json();
         }
-      }).catch(err => console.log(err));
-
-
+      })
+      .then((data) => {
+        console.log(data);
+        this.props.loginSuccessCallback('player-view', data._id, data.playerTeam);
+      })
+      .catch(err => console.log(err));
     }
+
     else if (this.state.user === 'coach') {
       fetch(`coaches/${this.state.email}/${this.state.password}`, {
         method: 'GET',
@@ -74,7 +78,7 @@ class LoginMain extends Component {
         }
         else {
           // Validation succeeds
-          // TODO: send back player information in callback for future use
+          // TODO: send back coach information in callback for future use
           console.log(response)
           this.props.updateViewCallback('coach-view');
         }

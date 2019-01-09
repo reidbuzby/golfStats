@@ -112,7 +112,8 @@ class CreateNewUser extends Component {
       fullName : this.state.fullName,
       email : this.state.email,
       playerTeam : this.state.playerTeam,
-      password : this.state.password
+      password : this.state.password,
+      rounds : []
     }
 
     if (this.state.password === this.state.confirmPassword) {

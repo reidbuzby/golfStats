@@ -19,6 +19,7 @@ class HoleForm extends Component {
       teeShot: this.props.teeShot,
       approachShot: this.props.approachShot,
       upAndDown: this.props.upAndDown,
+      shortsided: this.props.shortsided,
       putts: this.props.putts,
       putt1: this.props.putt1,
       putt2: this.props.putt2,
@@ -95,6 +96,10 @@ class HoleForm extends Component {
     this.setState({ putt5: e })
   }
 
+  handleShortsidedChange(e) {
+    this.setState({ shortsided: e });
+  }
+
   getSliderMarks() {
     const json = require('../classes/StrokesGained.json');
     var puttLengths = []
@@ -165,6 +170,7 @@ class HoleForm extends Component {
     holeData.teeShot = this.state.teeShot;
     holeData.approachShot = this.state.approachShot;
     holeData.upAndDown = this.state.upAndDown;
+    holeData.shortsided = this.state.shortsided;
     holeData.putts = this.state.putts;
     holeData.score = this.state.score;
 
@@ -198,6 +204,7 @@ class HoleForm extends Component {
     holeData.teeShot = this.state.teeShot;
     holeData.approachShot = this.state.approachShot;
     holeData.upAndDown = this.state.upAndDown;
+    holeData.shortsided = this.state.shortsided;
     holeData.putts = this.state.putts;
     holeData.score = this.state.score;
 
@@ -231,6 +238,7 @@ class HoleForm extends Component {
     holeData.teeShot = this.state.teeShot;
     holeData.approachShot = this.state.approachShot;
     holeData.upAndDown = this.state.upAndDown;
+    holeData.shortsided = this.state.shortsided;
     holeData.putts = this.state.putts;
     holeData.score = this.state.score;
 
@@ -269,6 +277,9 @@ class HoleForm extends Component {
       return false;
     }
     if (this.state.approachShot !== 'green' && this.state.upAndDown === null) {
+      return false;
+    }
+    if (this.state.approachShot !== 'green' && this.state.shortsided === null) {
       return false;
     }
     if (this.state.putts === null) {
@@ -347,6 +358,18 @@ class HoleForm extends Component {
           <ControlLabel>Did you get up and down?</ControlLabel>
         </div>
         <ToggleButtonGroup name="upanddown-buttons" type="radio" value={this.state.upAndDown} onChange={this.handleUpAndDownChange}>
+          <ToggleButton value="yes">Yes</ToggleButton>
+          <ToggleButton value="no">No</ToggleButton>
+        </ToggleButtonGroup>
+      </div>
+    );
+
+    const shortSidedButtons = (
+      <div style={{ 'marginBottom': 30}}>
+        <div>
+          <ControlLabel>Were you shortsided?</ControlLabel>
+        </div>
+        <ToggleButtonGroup name="shortsided-buttons" type="radio" value={this.state.shortsided} onChange={this.handleShortsidedChange}>
           <ToggleButton value="yes">Yes</ToggleButton>
           <ToggleButton value="no">No</ToggleButton>
         </ToggleButtonGroup>
@@ -453,6 +476,7 @@ class HoleForm extends Component {
           {teeShotButtons}
           {approachButtons}
           {(this.state.approachShot === "green" || this.state.approachShot === null) ? null : upAndDownButtons}
+          {(this.state.approachShot === "green" || this.state.approachShot === null) ? null : shortSidedButtons}
           {puttButtons}
           {this.getSliders(putt1Length, putt2Length, putt3Length, putt4Length, putt5Length)}
         </Jumbotron>

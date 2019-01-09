@@ -36,7 +36,28 @@ server.post('/teams', (request, response, next) => {
   db.collection('teams').insertOne(newRequest).then((result) => {
     response.send(result.ops[0]);
   }, next);
-})
+});
+
+// PUT request to add round data to a player Object
+server.put('/:playerID/newRound', (request, response, next) => {
+  const newRound = Object.assign(request.body);
+  const oid = ObjectID(request.params.playerID);
+  const query = { _id: oid };
+  db.collection('players').findOne(query).then((result) => {
+    console.log('result', result);
+    const rounds = result.rounds;
+    rounds.push(newRound);
+
+    db.collection('players').findOneAndUpdate(
+      { _id: oid },
+      { $set: { rounds: rounds }},
+      { returnOriginal: false },
+    )
+    .then((result) => {
+      response.send(result.value);
+    }, next);
+  }, next);
+});
 
 // PUT request to add player id to linked team
 server.put('/teams/:teamName', (request, response, next) => {
@@ -59,7 +80,6 @@ server.put('/teams/:teamName', (request, response, next) => {
           response.send(result.value);
         }, next);
     }, next);
-
 });
 
 // GET request to authenticate a player user for login. Route is by email

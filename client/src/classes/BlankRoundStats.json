@@ -1,0 +1,17 @@
+{
+  "data" : {
+    "firs": null,
+    "score": null,
+    "toPar": null,
+    "girs": null,
+    "putts": null,
+    "upAndDown": null,
+    "shortsided": null,
+    "sgpPro": null,
+    "sgpScratch": null
+  },
+  "playerID": null,
+  "course": null,
+  "teamName": null,
+  "timestamp": null
+}

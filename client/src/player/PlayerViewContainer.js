@@ -6,13 +6,14 @@ class PlayerViewContainer extends Component {
 
   // PROPS:
   // playerID -- the UID of the player to display
-  // updateViewCallback -- callback to change the view of the ViewContainer
+  // inputNewRoundCallback -- callback to change the view of the ViewContainer and send back player data
+  // teamName -- team name of the player currently displayed
   constructor(props) {
     super(props)
   }
 
   inputNewRound() {
-    this.props.updateViewCallback('input-new-round');
+    this.props.inputNewRoundCallback('input-new-round', this.props.playerID, this.props.teamName);
   }
 
   render() {

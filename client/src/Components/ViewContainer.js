@@ -12,16 +12,24 @@ class ViewContainer extends Component {
 
     this.state = {
       viewMode: 'login',
-      userId: null
+      userId: null,
+      teamName: null
     };
 
     // this.inputRoundCallback = this.inputRoundCallback.bind(this);
     this.updateViewCallback = this.updateViewCallback.bind(this);
     this.successCallback = this.successCallback.bind(this);
+    this.loginSuccessCallback = this.loginSuccessCallback.bind(this);
+    this.inputNewRoundCallback = this.inputNewRoundCallback.bind(this);
+    this.submittedRoundCallback = this.submittedRoundCallback.bind(this);
   }
 
   updateViewCallback(view) {
     this.setState({ viewMode : view });
+  }
+
+  inputNewRoundCallback(view, playerID, teamName) {
+    this.setState({ viewMode: view, userId: playerID, teamName: teamName });
   }
 
   successCallback(uid, userType) {
@@ -35,6 +43,15 @@ class ViewContainer extends Component {
     }
   }
 
+  loginSuccessCallback(view, userID, teamName) {
+    console.log('success', userID, teamName);
+    this.setState({ viewMode: view, userId: userID, teamName: teamName });
+  }
+
+  submittedRoundCallback() {
+    this.setState({ viewMode: 'submitted' });
+  }
+
   roundSuccessCallback() {
 
   }
@@ -46,7 +63,7 @@ class ViewContainer extends Component {
         <header>
           <h1>Golf Stats</h1>
         </header>
-        <RoundForm roundSuccessCallback={this.roundSuccessCallback}/>
+        <RoundForm submittedRoundCallback={this.submittedRoundCallback} roundSuccessCallback={this.roundSuccessCallback} playerID={this.state.userId} teamName={this.state.teamName}/>
       </div>
     );
 
@@ -55,7 +72,7 @@ class ViewContainer extends Component {
         <header>
           <h1>Golf Stats</h1>
         </header>
-        <LoginMain updateViewCallback={this.updateViewCallback}/>
+        <LoginMain loginSuccessCallback={this.loginSuccessCallback} updateViewCallback={this.updateViewCallback}/>
       </div>
     );
 
@@ -73,7 +90,7 @@ class ViewContainer extends Component {
         <header>
           <h1>Golf Stats</h1>
         </header>
-        <PlayerViewContainer playerUID={this.state.userID} updateViewCallback={this.updateViewCallback}/>
+        <PlayerViewContainer inputNewRoundCallback={this.inputNewRoundCallback} playerID={this.state.userId} teamName={this.state.teamName} updateViewCallback={this.updateViewCallback}/>
       </div>
     );
 
@@ -95,6 +112,16 @@ class ViewContainer extends Component {
       </div>
     );
 
+    // PLACEHOLDER FOR SUCCES OF INPUTED ROUND
+    const submitted = (
+      <div>
+        <header>
+          <h1>Golf Stats</h1>
+        </header>
+        <text>Round Submitted</text>
+      </div>
+    );
+
     switch (this.state.viewMode) {
       case 'login':
         return loginScreen;
@@ -113,6 +140,9 @@ class ViewContainer extends Component {
 
       case 'input-new-round':
         return roundForm;
+
+      case 'submitted':
+        return submitted;
 
     }
     // if (this.state.viewMode === "Intro") {

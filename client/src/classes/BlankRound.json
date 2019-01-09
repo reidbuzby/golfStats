@@ -18,7 +18,8 @@
       "putts": null,
       "puttsLength": [null, null, null, null, null],
       "score": "",
-      "par": null
+      "par": null,
+      "shortsided": null
     },
     {
       "hole": 3,
@@ -28,7 +29,8 @@
       "putts": null,
       "puttsLength": [null, null, null, null, null],
       "score": "",
-      "par": null
+      "par": null,
+      "shortsided": null
     },
     {
       "hole": 4,
@@ -38,7 +40,8 @@
       "putts": null,
       "puttsLength": [null, null, null, null, null],
       "score": "",
-      "par": null
+      "par": null,
+      "shortsided": null
     },
     {
       "hole": 5,
@@ -48,7 +51,8 @@
       "putts": null,
       "puttsLength": [null, null, null, null, null],
       "score": "",
-      "par": null
+      "par": null,
+      "shortsided": null
     },
     {
       "hole": 6,
@@ -58,7 +62,8 @@
       "putts": null,
       "puttsLength": [null, null, null, null, null],
       "score": "",
-      "par": null
+      "par": null,
+      "shortsided": null
     },
     {
       "hole": 7,
@@ -68,7 +73,8 @@
       "putts": null,
       "puttsLength": [null, null, null, null, null],
       "score": "",
-      "par": null
+      "par": null,
+      "shortsided": null
     },
     {
       "hole": 8,
@@ -78,7 +84,8 @@
       "putts": null,
       "puttsLength": [null, null, null, null, null],
       "score": "",
-      "par": null
+      "par": null,
+      "shortsided": null
     },
     {
       "hole": 9,
@@ -88,7 +95,8 @@
       "putts": null,
       "puttsLength": [null, null, null, null, null],
       "score": "",
-      "par": null
+      "par": null,
+      "shortsided": null
     },
     {
       "hole": 10,
@@ -98,7 +106,8 @@
       "putts": null,
       "puttsLength": [null, null, null, null, null],
       "score": "",
-      "par": null
+      "par": null,
+      "shortsided": null
     },
     {
       "hole": 11,
@@ -108,7 +117,8 @@
       "putts": null,
       "puttsLength": [null, null, null, null, null],
       "score": "",
-      "par": null
+      "par": null,
+      "shortsided": null
     },
     {
       "hole": 12,
@@ -118,7 +128,8 @@
       "putts": null,
       "puttsLength": [null, null, null, null, null],
       "score": "",
-      "par": null
+      "par": null,
+      "shortsided": null
     },
     {
       "hole": 13,
@@ -128,7 +139,8 @@
       "putts": null,
       "puttsLength": [null, null, null, null, null],
       "score": "",
-      "par": null
+      "par": null,
+      "shortsided": null
     },
     {
       "hole": 14,
@@ -138,7 +150,8 @@
       "putts": null,
       "puttsLength": [null, null, null, null, null],
       "score": "",
-      "par": null
+      "par": null,
+      "shortsided": null
     },
     {
       "hole": 15,
@@ -148,7 +161,8 @@
       "putts": null,
       "puttsLength": [null, null, null, null, null],
       "score": "",
-      "par": null
+      "par": null,
+      "shortsided": null
     },
     {
       "hole": 16,
@@ -158,7 +172,8 @@
       "putts": null,
       "puttsLength": [null, null, null, null, null],
       "score": "",
-      "par": null
+      "par": null,
+      "shortsided": null
     },
     {
       "hole": 17,
@@ -168,7 +183,8 @@
       "putts": null,
       "puttsLength": [null, null, null, null, null],
       "score": "",
-      "par": null
+      "par": null,
+      "shortsided": null
     },
     {
       "hole": 18,
@@ -178,11 +194,12 @@
       "putts": null,
       "puttsLength": [null, null, null, null, null],
       "score": "",
-      "par": null
+      "par": null,
+      "shortsided": null
     }
   ],
   "playerID": null,
   "course": null,
-  "team": null,
+  "teamName": null,
   "timestamp": null
 }

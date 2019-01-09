@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
 import HoleForm from '../Components/HoleForm';
+import CalculateStatistics from '../statistics/CalculateStatistics';
+import fetchHelper from '../serverHelpers/FetchHelper';
 
 class RoundForm extends Component {
 
   // PROPS:
   // updateViewCallback -- tells the ViewContainer what to display
+  // playerID -- player id for whoever is inputing the round
+  // teamName -- team name of the team that the player is on
+  // submittedRoundCallback -- tells the ViewContainer that a round has been submitted
   constructor(props) {
     super(props);
 
     this.state = {
-      hole: 1,
+      hole: 17,
       data: require('../classes/BlankRound.json')
     };
 
@@ -27,6 +32,7 @@ class RoundForm extends Component {
     currentHoleDataCopy.teeShot = holeData.teeShot;
     currentHoleDataCopy.approachShot = holeData.approachShot;
     currentHoleDataCopy.upAndDown = holeData.upAndDown;
+    currentHoleDataCopy.shortsided = holeData.shortsided;
     currentHoleDataCopy.putts = holeData.putts;
     currentHoleDataCopy.puttsLength = holeData.puttsLength;
     currentHoleDataCopy.score = holeData.score;
@@ -43,6 +49,7 @@ class RoundForm extends Component {
     currentHoleDataCopy.teeShot = holeData.teeShot;
     currentHoleDataCopy.approachShot = holeData.approachShot;
     currentHoleDataCopy.upAndDown = holeData.upAndDown;
+    currentHoleDataCopy.shortsided = holeData.shortsided;
     currentHoleDataCopy.putts = holeData.putts;
     currentHoleDataCopy.puttsLength = holeData.puttsLength;
     currentHoleDataCopy.score = holeData.score;
@@ -59,6 +66,7 @@ class RoundForm extends Component {
     currentHoleDataCopy.teeShot = holeData.teeShot;
     currentHoleDataCopy.approachShot = holeData.approachShot;
     currentHoleDataCopy.upAndDown = holeData.upAndDown;
+    currentHoleDataCopy.shortsided = holeData.shortsided;
     currentHoleDataCopy.putts = holeData.putts;
     currentHoleDataCopy.puttsLength = holeData.puttsLength;
     currentHoleDataCopy.score = holeData.score;
@@ -66,15 +74,24 @@ class RoundForm extends Component {
     const dataCopy = this.state.data;
     dataCopy.data[this.state.hole - 1] = currentHoleDataCopy;
 
+    dataCopy.playerID = this.props.playerID;
+    dataCopy.teamName = this.props.teamName;
+    dataCopy.timestamp = new Date();
+
+    // TODO: @here update dataCopy with the course ID
+
     this.setState({ data: dataCopy });
 
     console.log("round submited")
 
-    // TODO: @here update the data state (which contains round data) with playerID,
-    //       course, team, and timestamp
+    const statsCalc = new CalculateStatistics(this.state.data);
+    const roundStats = statsCalc.calculate();
 
-    // TODO: @here send the round data to a new set of functions that calculates
-    //       the stats on this submited round and uploads it to the server.
+    fetchHelper(`${roundStats.playerID}/newRound`, 'PUT', roundStats).then((added) => {
+      console.log('Uploaded new round');
+    }).catch(err => console.log(err)); // eslint-disable-line no-console
+
+    this.props.submittedRoundCallback();
 
   }
 
@@ -90,6 +107,7 @@ class RoundForm extends Component {
         teeShot={this.state.data.data[this.state.hole - 1].teeShot}
         approachShot={this.state.data.data[this.state.hole - 1].approachShot}
         upAndDown={this.state.data.data[this.state.hole - 1].upAndDown}
+        shortsided={this.state.data.data[this.state.hole - 1].shortsided}
         putts={this.state.data.data[this.state.hole - 1].putts}
         putt1={this.state.data.data[this.state.hole - 1].puttsLength[0]}
         putt2={this.state.data.data[this.state.hole - 1].puttsLength[1]}
