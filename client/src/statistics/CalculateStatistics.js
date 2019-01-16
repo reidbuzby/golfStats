@@ -34,13 +34,15 @@ class CalculateStatistics {
     for (let i=0;i<data.length;i++) {
       const hole = data[i];
 
-      if (hole.par != 3 && hole.teeShot === 'fairway') {
-        firs++;
+      if (hole.teeShot !== null) {
+        if (hole.par != 3 && hole.teeShot === 'fairway') {
+          firs++;
+        }
+        totalFairways++;
       }
-      totalFairways++;
     }
 
-    return (firs/totalFairways) * 100.0;
+    return this.rnd((firs/totalFairways) * 100.0);
   }
 
   calculateScore() {
@@ -49,7 +51,7 @@ class CalculateStatistics {
     let strokes = 0;
     for (let i=0;i<data.length;i++) {
       const hole = data[i];
-      strokes = strokes + hole.score;
+      strokes = strokes + parseInt(hole.score);
     }
 
     return strokes;
@@ -79,7 +81,7 @@ class CalculateStatistics {
       }
     }
 
-    return (girs/18.0) * 100.0;
+    return this.rnd((girs/this.round.data.length) * 100.0);
   }
 
   calculateNumberOfPutts() {
@@ -109,7 +111,7 @@ class CalculateStatistics {
       }
     }
 
-    return (success/total) * 100.0;
+    return this.rnd((success/total) * 100.0);
   }
 
   calculateSGPPro() {
@@ -124,7 +126,7 @@ class CalculateStatistics {
 
       let j = 0;
       while(puttsLength[j] !== null) {
-        const sgPutt = sgp.pro[String.valueOf(puttsLength[j])] - puttsLeft;
+        const sgPutt = sgp.pro[puttsLength[j]] - puttsLeft;
 
         strokesGained = strokesGained + sgPutt;
         puttsLeft--;
@@ -132,7 +134,7 @@ class CalculateStatistics {
       }
     }
 
-    return strokesGained;
+    return this.rnd(strokesGained);
   }
 
   calculateSGPScratch() {
@@ -147,7 +149,7 @@ class CalculateStatistics {
 
       let j = 0;
       while(puttsLength[j] !== null) {
-        const sgPutt = sgp.scratch[String.valueOf(puttsLength[j])] - puttsLeft;
+        const sgPutt = sgp.scratch[puttsLength[j]] - puttsLeft;
 
         strokesGained = strokesGained + sgPutt;
         puttsLeft--;
@@ -155,7 +157,7 @@ class CalculateStatistics {
       }
     }
 
-    return strokesGained;
+    return this.rnd(strokesGained);
   }
 
   calculateShortsided() {
@@ -172,6 +174,12 @@ class CalculateStatistics {
       }
     }
     return shortsided;
+  }
+
+  //to round to n decimal places
+  rnd(num) {
+    var multiplier = Math.pow(10, 2);
+    return Math.round(num * multiplier) / multiplier;
   }
 }
 

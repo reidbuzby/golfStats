@@ -25,7 +25,8 @@ class HoleForm extends Component {
       putt2: this.props.putt2,
       putt3: this.props.putt3,
       putt4: this.props.putt4,
-      putt5: this.props.putt5
+      putt5: this.props.putt5,
+      par: this.props.par
     };
 
     this.handleTeeShotChange = this.handleTeeShotChange.bind(this);
@@ -38,6 +39,7 @@ class HoleForm extends Component {
     this.handlePutt3 = this.handlePutt3.bind(this);
     this.handlePutt4 = this.handlePutt4.bind(this);
     this.handlePutt5 = this.handlePutt5.bind(this);
+    this.handleShortsidedChange = this.handleShortsidedChange.bind(this);
   }
 
   componentWillReceiveProps(props) {
@@ -47,12 +49,14 @@ class HoleForm extends Component {
       teeShot: props.teeShot,
       approachShot: props.approachShot,
       upAndDown: props.upAndDown,
+      shortsided: props.shortsided,
       putts: props.putts,
       putt1: props.putt1,
       putt2: props.putt2,
       putt3: props.putt3,
       putt4: props.putt4,
-      putt5: props.putt5
+      putt5: props.putt5,
+      par: props.par
     });
   }
 
@@ -173,6 +177,7 @@ class HoleForm extends Component {
     holeData.shortsided = this.state.shortsided;
     holeData.putts = this.state.putts;
     holeData.score = this.state.score;
+    holeData.par = this.state.par;
 
     switch (this.state.putts) {
       case 1:
@@ -207,6 +212,7 @@ class HoleForm extends Component {
     holeData.shortsided = this.state.shortsided;
     holeData.putts = this.state.putts;
     holeData.score = this.state.score;
+    holeData.par = this.state.par;
 
     switch (this.state.putts) {
       case 1:
@@ -241,6 +247,7 @@ class HoleForm extends Component {
     holeData.shortsided = this.state.shortsided;
     holeData.putts = this.state.putts;
     holeData.score = this.state.score;
+    holeData.par = this.state.par;
 
     switch (this.state.putts) {
       case 1:
@@ -270,7 +277,7 @@ class HoleForm extends Component {
     if (this.state.score === "") {
       return false;
     }
-    if (this.state.teeShot === null) {
+    if (this.state.teeShot === null && this.state.par !== 3) {
       return false;
     }
     if (this.state.approachShot === null) {
@@ -306,6 +313,7 @@ class HoleForm extends Component {
 
   render() {
 
+    // TODO: change marginLeft to the width of the (screen / 2) - 50
     const scoreInput = (
       <div>
         <ControlLabel>What score did you make?</ControlLabel>
@@ -473,7 +481,7 @@ class HoleForm extends Component {
       <div>
         <Jumbotron>
           {scoreInput}
-          {teeShotButtons}
+          {(this.state.par === 3) ? null : teeShotButtons}
           {approachButtons}
           {(this.state.approachShot === "green" || this.state.approachShot === null) ? null : upAndDownButtons}
           {(this.state.approachShot === "green" || this.state.approachShot === null) ? null : shortSidedButtons}

@@ -67,7 +67,7 @@ class CreateNewUser extends Component {
   }
 
   updatePlayerTeam(val) {
-    if (val.target.value === "null") {
+    if (val.target.value === null) {// might need to change back to "null"
       this.setState({ playerTeam : null })
     }
     else {
@@ -207,7 +207,7 @@ class CreateNewUser extends Component {
             value={this.state.playerTeam}
             onChange={(val) => this.updatePlayerTeam(val)}
           >
-            <option value="null">--</option>
+            <option value={null}>--</option>
             <option value="Middlebury Mens Golf">Middlebury Mens Golf</option>
           </FormControl>
           <ControlLabel>Password:</ControlLabel>

@@ -54,12 +54,10 @@ class LoginMain extends Component {
         }
         else {
           // Validation succeeds
-          // TODO: send back player information in callback for future use
           return response.json();
         }
       })
       .then((data) => {
-        console.log(data);
         this.props.loginSuccessCallback('player-view', data._id, data.playerTeam);
       })
       .catch(err => console.log(err));

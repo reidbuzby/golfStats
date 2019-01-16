@@ -21,7 +21,12 @@ class StatsTable extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      playerStats1: []
+    }
+
     this.generateCoachRows = this.generateCoachRows.bind(this);
+    this.pullPlayerStats = this.pullPlayerStats.bind(this);
   }
 
   // TODO get a list of player names (or UIDs) based on the given coach's team
@@ -68,23 +73,76 @@ class StatsTable extends Component {
     })
   }
 
-  generatePlayerRows(playerName) {
-    const playerStats = stats[playerName];
+  compareRounds(a, b) {
+    if (a.timestamp < b.timestamp) {
+      return -1;
+    }
+    if (a.timestamp > b.timestamp) {
+      return 1;
+    }
+    return 0;
+  }
+
+  pullPlayerStats(playerID) {
+    let stats = [];
+    fetch(`/${this.props.playerID}/stats`, {
+      method: 'GET',
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }),
+    }).then((response) => {
+      response.json().then((data) => {
+        this.setState({ playerStats1: data });
+      });
+    })
+    .catch(err => console.log(err));
+  }
+
+  // 2019-01-09T00:22:23.268Z
+  convertDateToString(date) {
+    const year = date.slice(0, 4);
+    const month = date.slice(5, 7);
+    const day = date.slice(8, 10);
+
+    return month + '/' + day + '/' + year;
+  }
+
+  generatePlayerRowsTable1(playerID) {
+    this.pullPlayerStats(playerID);
+
+    const playerStats = this.state.playerStats1;
 
     let rows = [];
 
-    for (var stat in playerStats) {
-      // row: stat name, player average, team average
-      rows.push(
-        <tr>
-          <th>{stat}</th>
-          <td>{playerStats[stat]}</td>
-          <td>{this.getTeamAverageStat(stat)}</td>
-        </tr>
-      );
+    if (playerStats.length !== 0) {
+      for (let i=0;i<playerStats.length;i++) {
+        const round = playerStats[i];
+
+        // row: stat name, player average, team average
+        rows.push(
+          <tr>
+            <td>{this.convertDateToString(round.timestamp)}</td>
+            <td>{round.course}</td>
+            <td>{round.data.score}</td>
+            <td>{round.data.toPar}</td>
+            <td>{round.data.firs}</td>
+            <td>{round.data.girs}</td>
+            <td>{round.data.putts}</td>
+            <td>{round.data.upAndDown}</td>
+            <td>{round.data.shortsided}</td>
+            <td>{round.data.sgpPro}</td>
+            <td>{round.data.sgpScratch}</td>
+          </tr>
+        );
+      }
     }
 
     return rows;
+  }
+
+  generatePlayerRowsTable2(playerID) {
+    // TODO: pull total player and team stats here and generate table
   }
 
   render() {
@@ -108,8 +166,31 @@ class StatsTable extends Component {
       </Table>
     );
 
+    const playerTable1 = (
+      <Table striped bordered condensed hover>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Course</th>
+            <th>Total score</th>
+            <th>Score to par</th>
+            <th>Fairways hit percentage</th>
+            <th>Greens in regulation percentage</th>
+            <th>Total putts</th>
+            <th>Up and down percentage</th>
+            <th>Total times you were shortsided</th>
+            <th>Strokes gained putting (Compared to pros)</th>
+            <th>Strokes gained putting (Compared to scratch golfers)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {this.generatePlayerRowsTable1(this.props.playerID)}
+        </tbody>
+      </Table>
+    );
+
     // TODO: Maybe have last year, 6 months, 3 months etc. for each stat?
-    const playerTable = (
+    const playerTable2 = (
       <Table striped bordered condensed hover>
         <thead>
           <tr>
@@ -119,7 +200,7 @@ class StatsTable extends Component {
           </tr>
         </thead>
         <tbody>
-          {this.generatePlayerRows(this.props.playerID)}
+          {this.generatePlayerRowsTable2(this.props.playerID)}
         </tbody>
       </Table>
     );
@@ -128,7 +209,7 @@ class StatsTable extends Component {
       return coachTable;
     }
     else if (this.props.whoAmI === 'player') {
-      return playerTable;
+      return playerTable1;
     }
 
   }

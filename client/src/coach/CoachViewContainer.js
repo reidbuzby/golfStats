@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Table, Grid, Col, Row, Button } from 'react-bootstrap';
 import StatsTable from '../Components/StatsTable';
+import CourseForm from '../Components/CourseForm';
 
 class CoachViewContainer extends Component {
 
@@ -12,12 +13,12 @@ class CoachViewContainer extends Component {
     this.state = {
       viewMode : 'main'
     }
+
+    this.addCourse = this.addCourse.bind(this);
   }
 
-  // TODO: this button should pull up the functionality for the coach to create a new course
-  // that will get added to the course database
   addCourse() {
-    console.log('add course')
+    this.setState({ viewMode: 'new-course' });
   }
 
 
@@ -55,6 +56,12 @@ class CoachViewContainer extends Component {
                 </Col>
               </Row>
             </Grid>
+          </div>
+        );
+      case 'new-course':
+        return (
+          <div>
+            <CourseForm />
           </div>
         );
     }

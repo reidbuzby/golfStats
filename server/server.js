@@ -14,6 +14,14 @@ const corsOptions = {
 server.use(cors(corsOptions));
 server.use(bodyParser.json());
 
+// POST request to create new course
+server.post('/courses', (request, response, next) => {
+  const newCourse = Object.assign(request.body);
+  db.collection('courses').insertOne(newCourse).then((result) => { // eslint-disable-line no-undef
+    response.send(result.ops[0]);
+  }, next);
+});
+
 // POST request to create new coach account
 server.post('/coaches', (request, response, next) => {
   const newRequest = Object.assign(request.body);
@@ -44,7 +52,6 @@ server.put('/:playerID/newRound', (request, response, next) => {
   const oid = ObjectID(request.params.playerID);
   const query = { _id: oid };
   db.collection('players').findOne(query).then((result) => {
-    console.log('result', result);
     const rounds = result.rounds;
     rounds.push(newRound);
 
@@ -66,9 +73,6 @@ server.put('/teams/:teamName', (request, response, next) => {
     .then((result) => {
       const playersList = result.players;
       playersList.push(newID.playerID);
-      console.log('playersList', playersList);
-      console.log('playerID', newID.playerID);
-      console.log('newPlayersList', playersList);
 
       db.collection('teams') // eslint-disable-line no-undef
         .findOneAndUpdate(
@@ -103,21 +107,59 @@ server.get('/players/:email/:password', (request, response, next) => {
 server.get('/coaches/:email/:password', (request, response, next) => {
   const query = { email: request.params.email };
   db.collection('coaches').find(query).toArray().then((documents) => { // eslint-disable-line no-undef
-    let found = false;
     for (let i = 0; i < documents.length; i++) {
       if (documents[i].password === request.params.password) {
         response.send(documents[i]);
-        found = true;
       }
     }
-    if (!found) {
-      response.sendStatus(401);
-    }
+    response.sendStatus(401);
   }, next);
 });
 
+// GET request to pull a users stats
+server.get('/:playerID/stats', (request, response, next) => {
+  const oid = ObjectID(request.params.playerID);
+  const query = { _id: oid };
 
+  db.collection('players').findOne(query).then((result) => {
+    if (result) {
+      response.send(result.rounds);
+    }
+    else {
+      // Bad request
+      response.sendStatus(403);
+    }
+  });
+});
 
+// GET request to pull all courses
+server.get('/courses', (request, response, next) => {
+  db.collection('courses').find({}).toArray().then((result) => {
+    console.log(result);
+    if (result) {
+      response.send(result);
+    }
+    else {
+      // Bad request
+      response.sendStatus(403);
+    }
+  });
+});
+
+// GET request to pull a course by id
+server.get('/courses/:courseID', (request, response, next) => {
+  const oid = ObjectID(request.params.courseID);
+  const query = { _id: oid };
+  db.collection('courses').findOne(query).then((result) => {
+    if (result) {
+      response.send(result);
+    }
+    else {
+      // Bad request
+      response.sendStatus(403);
+    }
+  });
+});
 
 // express only serves static assets in production
 if (process.env.NODE_ENV === 'production') {

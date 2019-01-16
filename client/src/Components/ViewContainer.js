@@ -49,7 +49,7 @@ class ViewContainer extends Component {
   }
 
   submittedRoundCallback() {
-    this.setState({ viewMode: 'submitted' });
+    this.setState({ viewMode: 'player-view' });
   }
 
   roundSuccessCallback() {
@@ -145,27 +145,6 @@ class ViewContainer extends Component {
         return submitted;
 
     }
-    // if (this.state.viewMode === "Intro") {
-    //   return (
-    //     <div>
-    //       <header>
-    //         <h1>Golf Stats</h1>
-    //       </header>
-    //       <OpeningScreen inputRoundCallback={this.inputRoundCallback}/>
-    //     </div>
-    //   );
-    // }
-    // if (this.state.viewMode === "InputRound") {
-    //   return (
-    //     <div>
-    //       <header>
-    //         <h1>Golf Stats</h1>
-    //       </header>
-    //       <RoundFormContainer />
-    //     </div>
-    //   )
-    // }
-
   }
 }
 
