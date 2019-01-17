@@ -346,7 +346,7 @@ class HoleForm extends Component {
     const approachButtons = (
       <div style={{ 'marginBottom': 30}}>
         <div>
-          <ControlLabel>Where did your approach shot go?</ControlLabel>
+          <ControlLabel>Where did your {(this.state.par === 3) ? "tee" : "approach"} shot go?</ControlLabel>
         </div>
         <ToggleButtonGroup name="approach-shot-buttons" type="radio" value={this.state.approachShot} onChange={this.handleApproachShotChange}>
           <ToggleButton value="green">Green</ToggleButton>

@@ -129,16 +129,16 @@ class LoginMain extends Component {
         <FormGroup controlId='login'>
           <ControlLabel>E-mail:</ControlLabel>
           <FormControl
-            type="text"
+            type="email"
             value={this.state.email}
-            placeholder="golfer@middlebury.edu"
+            placeholder="Email"
             onChange={(val) => this.updateEmail(val)}
           />
           <ControlLabel>Password:</ControlLabel>
           <FormControl
-            type="text"
+            type="password"
             value={this.state.password}
-            placeholder="******"
+            placeholder="Password"
             onChange={(val) => this.updatePassword(val)}
           />
         </FormGroup>

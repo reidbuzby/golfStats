@@ -96,7 +96,7 @@ class CourseForm extends Component {
     dataCopy.data[this.state.hole - 1] = currentHoleDataCopy;
 
     fetchHelper('/courses', 'POST', this.state.data).then((added) => {
-      console.log('Uploaded new round');
+      this.props.successCallback();
     }).catch(err => console.log(err)); // eslint-disable-line no-console
   }
 
@@ -115,20 +115,20 @@ class CourseForm extends Component {
             onChange={(val) => this.handleNameChange(val)}
             style={{ width: 300, marginLeft: 500 }}
           />
-          <ControlLabel>What state is the course in:</ControlLabel>
-          <FormControl
-            type="text"
-            value={this.state.courseState}
-            placeholder="Vermont"
-            onChange={(val) => this.handleStateChange(val)}
-            style={{ width: 300, marginLeft: 500 }}
-          />
           <ControlLabel>What city is the course in:</ControlLabel>
           <FormControl
             type="text"
             value={this.state.courseCity}
             placeholder="Middlebury"
             onChange={(val) => this.handleCityChange(val)}
+            style={{ width: 300, marginLeft: 500 }}
+          />
+          <ControlLabel>What state is the course in:</ControlLabel>
+          <FormControl
+            type="text"
+            value={this.state.courseState}
+            placeholder="Vermont"
+            onChange={(val) => this.handleStateChange(val)}
             style={{ width: 300, marginLeft: 500 }}
           />
         </Jumbotron>

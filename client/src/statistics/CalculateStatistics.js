@@ -17,6 +17,8 @@ class CalculateStatistics {
     roundStats.data.shortsided = this.calculateShortsided();
     roundStats.data.sgpPro = this.calculateSGPPro();
     roundStats.data.sgpScratch = this.calculateSGPScratch();
+    roundStats.data.madeShort = this.calculateMadeShortPutts();
+    roundStats.data.proximity = this.calculateProximity();
 
     roundStats.playerID = this.round.playerID;
     roundStats.course = this.round.course;
@@ -161,7 +163,6 @@ class CalculateStatistics {
   }
 
   calculateShortsided() {
-    const sgp = require('../classes/StrokesGained.json');
     const data = this.round.data;
 
     let shortsided = 0;
@@ -174,6 +175,45 @@ class CalculateStatistics {
       }
     }
     return shortsided;
+  }
+
+  calculateMadeShortPutts() {
+    const data = this.round.data;
+
+    let made = 0;
+    let total = 0;
+    for (let i=0;i<data.length;i++) {
+      const hole = data[i];
+      for (let j=0;j<hole.puttsLength.length;j++) {
+        if (hole.puttsLength[j] !== null && hole.puttsLength[j] <= 5) {
+          if (hole.puttsLength[j+1] === null) {
+            made++;
+            total++;
+          }
+          else {
+            total++;
+          }
+        }
+      }
+    }
+
+    return this.rnd((made / total) * 100.0);
+  }
+
+  calculateProximity() {
+    const data = this.round.data;
+
+    let hit = 0;
+    let total = 0;
+    for (let i=0;i<data.length;i++) {
+      const hole = data[i];
+      if (hole.approachShot === "green") {
+        hit = hit + hole.puttsLength[0];
+        total++;
+      }
+    }
+
+    return this.rnd(hit/total);
   }
 
   //to round to n decimal places

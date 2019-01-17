@@ -15,16 +15,16 @@ class CoachViewContainer extends Component {
     }
 
     this.addCourse = this.addCourse.bind(this);
+    this.resetView = this.resetView.bind(this);
   }
 
   addCourse() {
     this.setState({ viewMode: 'new-course' });
   }
 
-
-  // TODO: Placeholder until I can think of another functionality to put here instead
-  doSomethingElse() {
-    console.log('doSomethingElse')
+  resetView() {
+    alert('Uploaded course successfully');
+    this.setState({ viewMode: 'main' });
   }
 
   render() {
@@ -35,10 +35,6 @@ class CoachViewContainer extends Component {
           value='add-course'
           onClick={() => this.addCourse()}
         >Add Course</Button>
-        <Button
-          value='do-something-else'
-          onClick={() => this.doSomethingElse()}
-        >Do Something Else</Button>
       </div>
     );
 
@@ -58,10 +54,20 @@ class CoachViewContainer extends Component {
             </Grid>
           </div>
         );
+
       case 'new-course':
         return (
           <div>
-            <CourseForm />
+            <CourseForm successCallback={this.resetView}/>
+          </div>
+        );
+
+      case 'uploaded-course':
+        return (
+          <div>
+            <header>
+              <h1>Uploaded course successfully</h1>
+            </header>
           </div>
         );
     }

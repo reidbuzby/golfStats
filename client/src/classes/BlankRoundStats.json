@@ -8,7 +8,9 @@
     "upAndDown": null,
     "shortsided": null,
     "sgpPro": null,
-    "sgpScratch": null
+    "sgpScratch": null,
+    "madeShort": null,
+    "proximity": null
   },
   "playerID": null,
   "course": null,

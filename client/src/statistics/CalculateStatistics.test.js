@@ -104,6 +104,76 @@ const round3 = {
   ]
 }
 
+const round4 = {
+  data: [
+    {
+      putts: 1,
+      teeShot: "fairway",
+      puttsLength: [15, 5, 1, null, null],
+      score: "4",
+      par: 5,
+      approachShot: 'fairway',
+      upAndDown: 'yes',
+      shotsided: null
+    },
+    {
+      putts: 1,
+      teeShot: "rough",
+      puttsLength: [3, null, null, null, null],
+      score: "5",
+      par: 5,
+      approachShot: 'sand',
+      upAndDown: 'yes',
+      shortsided: 'yes'
+    },
+    {
+      putts: 1,
+      teeShot: "fairway",
+      puttsLength: [1, null, null, null, null],
+      score: "4",
+      par: 5,
+      approachShot: 'fairway',
+      upAndDown: 'no',
+      shotsided: null
+    },
+  ]
+}
+
+const round5 = {
+  data: [
+    {
+      putts: 1,
+      teeShot: "fairway",
+      puttsLength: [15, 5, 1, null, null],
+      score: "4",
+      par: 5,
+      approachShot: "green",
+      upAndDown: 'yes',
+      shotsided: null
+    },
+    {
+      putts: 1,
+      teeShot: "rough",
+      puttsLength: [3, null, null, null, null],
+      score: "5",
+      par: 5,
+      approachShot: "sand",
+      upAndDown: 'yes',
+      shortsided: 'yes'
+    },
+    {
+      putts: 1,
+      teeShot: "fairway",
+      puttsLength: [30, 5, null, null, null],
+      score: "4",
+      par: 5,
+      approachShot: "green",
+      upAndDown: null,
+      shotsided: null
+    },
+  ]
+}
+
 describe('Strokes gained tests', () => {
   test('Scratch test', () => {
     const statsCalc = new CalculateStatistics(round);
@@ -172,5 +242,19 @@ describe('Shortsided test', () => {
   test('Shortsided test', () => {
     const statsCalc = new CalculateStatistics(round);
     expect(statsCalc.calculateShortsided()).toEqual(1);
+  });
+});
+
+describe('Made short putts test', () => {
+  test('Made short putts test', () => {
+    const statsCalc = new CalculateStatistics(round4);
+    expect(statsCalc.calculateMadeShortPutts()).toEqual(75.0);
+  });
+});
+
+describe('Avg proximity test', () => {
+  test('Avg proximity test', () => {
+    const statsCalc = new CalculateStatistics(round5);
+    expect(statsCalc.calculateProximity()).toEqual(22.5);
   });
 });

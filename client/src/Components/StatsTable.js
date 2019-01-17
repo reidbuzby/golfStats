@@ -127,12 +127,14 @@ class StatsTable extends Component {
             <td>{round.data.score}</td>
             <td>{round.data.toPar}</td>
             <td>{round.data.firs}</td>
+            <td>{round.data.proximity}</td>
             <td>{round.data.girs}</td>
             <td>{round.data.putts}</td>
             <td>{round.data.upAndDown}</td>
             <td>{round.data.shortsided}</td>
             <td>{round.data.sgpPro}</td>
             <td>{round.data.sgpScratch}</td>
+            <td>{round.data.madeShort}</td>
           </tr>
         );
       }
@@ -175,12 +177,14 @@ class StatsTable extends Component {
             <th>Total score</th>
             <th>Score to par</th>
             <th>Fairways hit percentage</th>
+            <th>Average approach shot proximity (ft)</th>
             <th>Greens in regulation percentage</th>
             <th>Total putts</th>
             <th>Up and down percentage</th>
             <th>Total times you were shortsided</th>
             <th>Strokes gained putting (Compared to pros)</th>
             <th>Strokes gained putting (Compared to scratch golfers)</th>
+            <th>Make percentage inside 5 feet</th>
           </tr>
         </thead>
         <tbody>

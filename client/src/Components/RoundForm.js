@@ -122,7 +122,6 @@ class RoundForm extends Component {
     for (let i=0;i<this.state.courseList.length;i++) {
       if (this.state.courseName === this.state.courseIDs[i][1]) {
         fetchHelper(`/courses/${this.state.courseIDs[i][0]}`, 'GET').then((response) => {
-          console.log('course', response);
           this.setState({ course: response });
         }).catch(err => console.log(err)); // eslint-disable-line no-console
 
