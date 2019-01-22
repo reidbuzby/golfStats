@@ -24,6 +24,8 @@ class CalculateStatistics {
     roundStats.course = this.round.course;
     roundStats.teamName = this.round.teamName;
     roundStats.timestamp = this.round.timestamp;
+    roundStats.weather = this.round.weather;
+    roundStats.wind = this.round.wind;
 
     return roundStats;
   }

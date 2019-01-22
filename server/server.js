@@ -86,6 +86,60 @@ server.put('/teams/:teamName', (request, response, next) => {
     }, next);
 });
 
+// GET request to pull all player ID's for a team based on coach ID
+server.get('/teams/:coachID', (request, response, next) => {
+  const query = { coachID: request.params.coachID };
+  db.collection('teams').findOne(query).then((result) => {
+    if (result) {
+      response.send(result.players);
+    }
+    else {
+      response.sendStatus(403);
+    }
+  });
+});
+
+// GET request to return all stats for a given player's team
+server.get('/players/:playerID/allStats', (request, response, next) => {
+  const oid = ObjectID(request.params.playerID);
+  const query = { _id: oid };
+
+  db.collection('players').findOne(query).then((result) => {
+    if (result) {
+      const teamName = result.playerTeam;
+      const overallStats = [];
+
+      db.collection('teams').findOne({ teamName: teamName }).then((result2) => {
+        if (result2) {
+          const playerIDs = result2.players;
+          let playerQuery = [];
+          for (let i=0;i<playerIDs.length;i++) {
+            const oid2 = ObjectID(playerIDs[i]);
+            playerQuery.push( { _id: oid2 } );
+          }
+
+          const query2 = { $or: playerQuery };
+
+          db.collection('players').find(query2).toArray().then((documents) => {
+            for (let i=0;i<documents.length;i++) {
+              for (let j=0;j<documents[i].rounds.length;j++) {
+                overallStats.push(documents[i].rounds[j]);
+              }
+            }
+            response.send(overallStats);
+          });
+        }
+        else {
+          response.sendStatus(403);
+        }
+      });
+    }
+    else {
+      response.sendStatus(403);
+    }
+  });
+});
+
 // GET request to authenticate a player user for login. Route is by email
 server.get('/players/:email/:password', (request, response, next) => {
   const query = { email: request.params.email };
@@ -124,6 +178,22 @@ server.get('/:playerID/stats', (request, response, next) => {
   db.collection('players').findOne(query).then((result) => {
     if (result) {
       response.send(result.rounds);
+    }
+    else {
+      // Bad request
+      response.sendStatus(403);
+    }
+  });
+});
+
+// GET request to pull a user's name
+server.get('/:playerID/name', (request, response, next) => {
+  const oid = ObjectID(request.params.playerID);
+  const query = { _id: oid };
+
+  db.collection('players').findOne(query).then((result) => {
+    if (result) {
+      response.send({ name: result.fullName} );
     }
     else {
       // Bad request

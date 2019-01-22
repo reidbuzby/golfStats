@@ -75,12 +75,13 @@ class LoginMain extends Component {
           alert('Email or Password is incorrect')
         }
         else {
-          // Validation succeeds
-          // TODO: send back coach information in callback for future use
-          console.log(response)
-          this.props.updateViewCallback('coach-view');
+          return response.json();
         }
-      }).catch(err => console.log(err));
+      })
+      .then((data) => {
+        this.props.loginSuccessCallback('coach-view', data._id, data.teamName);
+      })
+      .catch(err => console.log(err));
 
 
     }

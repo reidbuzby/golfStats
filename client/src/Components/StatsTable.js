@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
 import { Table, Grid, Col, Row } from 'react-bootstrap';
-
-// TODO: Create a file for CoachStatTable, PlayerStatTable1, and PlayerStatTable2
-//       and have all functions related to pulling stats in another seperate file.
-
-// TODO hardcoded stats and players for now, pull from server later
-const stats = { "reid" : { "stat1" : 5, "stat2" : 3, "stat3" : 3, "stat4" : 3, "stat5" : 3},
-                "phil" : { "stat1" : 5, "stat2" : 3, "stat3" : 3, "stat4" : 3, "stat5" : 3}};
+import CalculateOverallStatistics from '../statistics/CalculateOverallStatistics';
 
 // TODO: make this modifiable so coach can choose which stats they want to be main stats shown
 //       on their main screen
-const mainStats = ['stat1', 'stat2', 'stat3', 'stat4', 'stat5']
+const mainStats = [['Total score', 'score'],
+                   ['Score to par', 'toPar'],
+                   ['Fairways hit percentage', 'firs'],
+                   ['Approach shot proximity (ft)', 'proximity'],
+                   ['Greens in regulation percentage', 'girs'],
+                   ['Total putts', 'putts'],
+                   ['Up and down percentage', 'upAndDown'],
+                   ['Total shots shortsided', 'shortsided'],
+                   ['Strokes gained putting (Compared to pros)', 'sgpPro'],
+                   ['Strokes gained putting (Compared to scratch golfers)', 'sgpScratch'],
+                   ['Make percentage inside 5 feet', 'madeShort']];
 
 class StatsTable extends Component {
 
@@ -22,55 +26,92 @@ class StatsTable extends Component {
     super(props);
 
     this.state = {
-      playerStats1: []
+      playerStats1: [],
+      overallStats: [],
+      playerIDs: [],
+      coachRows: []
     }
 
     this.generateCoachRows = this.generateCoachRows.bind(this);
     this.pullPlayerStats = this.pullPlayerStats.bind(this);
-  }
 
-  // TODO get a list of player names (or UIDs) based on the given coach's team
-  getAllPlayers(coachName) {
-    // TODO: list of players returned should be based on coachName
-    return ['reid', 'phil'];
-  }
-
-  getPlayer(player) {
-    // TODO: returned player name (or UID) should be the inputed player name
-    return ['reid']
-  }
-
-  // TODO: pull the team average for the inputed stat
-  getTeamAverageStat(stat) {
-    return 1.6969
+    if (this.props.coachID) {
+      this.generateCoachRows(this.props.coachID)
+    }
   }
 
   // TODO instead of pulling from hardcoded mainStats, pull from server.
   // creates react-bootstrap rows for the stats table on all players
-  generateCoachRows(coachName) {
-
-    const players = this.getAllPlayers(coachName);
-
-    // Only pulls the first n many stats from the stats dictionary, where n is the
-    // length of the mainStats list. If want to make mainStats modifiable, cannot use
-    // a for loop over stats dictionary
-    return players.map((item, i) => {
-      let playerStats = [item]
-      for (let j = 0; j < mainStats.length; j++) {
-        playerStats.push(stats[item][mainStats[j]]);
-      }
-      // playerStats[0] is the player name
-      return [
-        <tr>
-          <th>{playerStats[0]}</th>
-          <td>{playerStats[1]}</td>
-          <td>{playerStats[2]}</td>
-          <td>{playerStats[3]}</td>
-          <td>{playerStats[4]}</td>
-          <td>{playerStats[5]}</td>
-        </tr>
-      ];
+  generateCoachRows(coachID) {
+    fetch(`/teams/${coachID}`, {
+      method: 'GET',
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }),
+    }).then((response) => {
+      console.log('here', response)
+      response.json().then((data) => {
+        console.log('data', data);
+        this.setState({ playerIDs: data });
+        console.log("stat", this.state.playerIDs);
+      });
     })
+    .then(() => {
+      console.log('here2')
+      console.log('playerids', this.state.playerIDs);
+      for (let i=0;i<this.state.playerIDs.length;i++) {
+        console.log('here2.5')
+        fetch(`/${this.state.playerIDs[i]}/stats`, {
+          method: 'GET',
+          headers: new Headers({
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          }),
+        }).then((response) => {
+          console.log('here3')
+          response.json().then((data) => {
+            console.log('here4')
+            const statsCalc = new CalculateOverallStatistics(data);
+            const playerAverages = statsCalc.calculate();
+
+            fetch(`/${this.state.playerIDs[i]}/name`, {
+              method: 'GET',
+              headers: new Headers({
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              }),
+            }).then((response2) => {
+              console.log('here5')
+              response2.json().then((data2) => {
+                const rows = this.state.coachRows;
+                console.log('name', data2.name);
+                console.log('playerAverages', playerAverages);
+                rows.push(
+                  <tr>
+                    <td>{data2.name}</td>
+                    <td>{playerAverages.score}</td>
+                    <td>{playerAverages.toPar}</td>
+                    <td>{playerAverages.firs}</td>
+                    <td>{playerAverages.proximity}</td>
+                    <td>{playerAverages.girs}</td>
+                    <td>{playerAverages.putts}</td>
+                    <td>{playerAverages.upAndDown}</td>
+                    <td>{playerAverages.shortsided}</td>
+                    <td>{playerAverages.sgpPro}</td>
+                    <td>{playerAverages.sgpScratch}</td>
+                    <td>{playerAverages.madeShort}</td>
+                  </tr>
+                );
+                this.setState({ coachRows: rows });
+              });
+            });
+          });
+        })
+        .catch(err => console.log(err));
+      }
+    })
+    .catch(err => console.log(err));
   }
 
   compareRounds(a, b) {
@@ -84,8 +125,7 @@ class StatsTable extends Component {
   }
 
   pullPlayerStats(playerID) {
-    let stats = [];
-    fetch(`/${this.props.playerID}/stats`, {
+    fetch(`/${playerID}/stats`, {
       method: 'GET',
       headers: new Headers({
         Accept: 'application/json',
@@ -95,6 +135,22 @@ class StatsTable extends Component {
       response.json().then((data) => {
         this.setState({ playerStats1: data });
       });
+    })
+    .catch(err => console.log(err));
+  }
+
+  pullAllPlayerStats() {
+    fetch(`/players/${this.props.playerID}/allStats`, {
+      method: 'GET',
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }),
+    }).then((response) => {
+      response.json().then((data) => {
+        console.log('data', data);
+        this.setState({ overallStats: data });
+      })
     })
     .catch(err => console.log(err));
   }
@@ -135,6 +191,8 @@ class StatsTable extends Component {
             <td>{round.data.sgpPro}</td>
             <td>{round.data.sgpScratch}</td>
             <td>{round.data.madeShort}</td>
+            <td>{round.weather}</td>
+            <td>{round.wind}</td>
           </tr>
         );
       }
@@ -143,8 +201,31 @@ class StatsTable extends Component {
     return rows;
   }
 
-  generatePlayerRowsTable2(playerID) {
-    // TODO: pull total player and team stats here and generate table
+  generatePlayerRowsTable2() {
+    this.pullAllPlayerStats();
+
+    console.log('overallStats', this.state.overallStats);
+    const statsCalc = new CalculateOverallStatistics(this.state.overallStats);
+    const teamAverages = statsCalc.calculate();
+    console.log('teamAverages', teamAverages);
+
+    const statsCalc2 = new CalculateOverallStatistics(this.state.playerStats1);
+    const playerAverages = statsCalc2.calculate();
+
+
+    let rows = [];
+
+    for (let i=0;i<mainStats.length;i++) {
+      rows.push(
+        <tr>
+          <td>{mainStats[i][0]}</td>
+          <td>{playerAverages[mainStats[i][1]]}</td>
+          <td>{teamAverages[mainStats[i][1]]}</td>
+        </tr>
+      );
+    }
+
+    return rows;
   }
 
   render() {
@@ -155,15 +236,21 @@ class StatsTable extends Component {
         <thead>
           <tr>
             <th>Name</th>
-            <th>Stat 1</th>
-            <th>Stat 2</th>
-            <th>Stat 3</th>
-            <th>Stat 4</th>
-            <th>Stat 5</th>
+            <th>Scoring Average</th>
+            <th>Scoring Average to par</th>
+            <th>Fairways hit percentage</th>
+            <th>Average approach shot proximity (ft)</th>
+            <th>Greens in regulation percentage</th>
+            <th>Total putts</th>
+            <th>Up and down percentage</th>
+            <th>Average shortsided shots</th>
+            <th>Strokes gained putting (Compared to pros)</th>
+            <th>Strokes gained putting (Compared to scratch golfers)</th>
+            <th>Make percentage inside 5 feet</th>
           </tr>
         </thead>
         <tbody>
-          {this.generateCoachRows(this.props.coachID)}
+          {(this.props.coachID) ? this.state.coachRows : null}
         </tbody>
       </Table>
     );
@@ -185,10 +272,12 @@ class StatsTable extends Component {
             <th>Strokes gained putting (Compared to pros)</th>
             <th>Strokes gained putting (Compared to scratch golfers)</th>
             <th>Make percentage inside 5 feet</th>
+            <th>Weather conditions</th>
+            <th>Wind conditions</th>
           </tr>
         </thead>
         <tbody>
-          {this.generatePlayerRowsTable1(this.props.playerID)}
+          {(this.props.playerID) ? this.generatePlayerRowsTable1(this.props.playerID) : null}
         </tbody>
       </Table>
     );
@@ -198,13 +287,13 @@ class StatsTable extends Component {
       <Table striped bordered condensed hover>
         <thead>
           <tr>
-            <th></th>
+            <td>Stat</td>
             <th>Your Average</th>
             <th>Team Average</th>
           </tr>
         </thead>
         <tbody>
-          {this.generatePlayerRowsTable2(this.props.playerID)}
+          {(this.props.playerID) ? this.generatePlayerRowsTable2() : null}
         </tbody>
       </Table>
     );
@@ -213,7 +302,20 @@ class StatsTable extends Component {
       return coachTable;
     }
     else if (this.props.whoAmI === 'player') {
-      return playerTable1;
+      return (
+        <div>
+          <Grid>
+            <Row>
+              <Col md={4}>
+                {playerTable2}
+              </Col>
+              <Col md={8}>
+                {playerTable1}
+              </Col>
+            </Row>
+          </Grid>
+        </div>
+      );
     }
 
   }

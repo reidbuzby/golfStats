@@ -35,16 +35,13 @@ class ViewContainer extends Component {
   successCallback(uid, userType) {
     if (userType === 'player') {
       this.setState({ viewMode : 'player-view', userId : uid});
-      console.log('uid:', uid)
     }
     else if (userType === 'coach') {
       this.setState({ viewMode : 'coach-view', userId : uid});
-      console.log('uid:', uid)
     }
   }
 
   loginSuccessCallback(view, userID, teamName) {
-    console.log('success', userID, teamName);
     this.setState({ viewMode: view, userId: userID, teamName: teamName });
   }
 
@@ -81,7 +78,7 @@ class ViewContainer extends Component {
         <header>
           <h1>Golf Stats</h1>
         </header>
-        <CoachViewContainer coachUID={this.state.userID}/>
+        <CoachViewContainer coachID={this.state.userId}/>
       </div>
     );
 

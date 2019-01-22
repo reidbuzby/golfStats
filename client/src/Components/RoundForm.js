@@ -21,13 +21,23 @@ class RoundForm extends Component {
       courseName: null,
       course: null,
       courseList: null,
-      courseIDs: null
+      courseIDs: null,
+      month: null,
+      day: null,
+      year: null,
+      weather: null,
+      wind: null
     };
 
     this.nextHoleUpdate = this.nextHoleUpdate.bind(this);
     this.previousHoleUpdate = this.previousHoleUpdate.bind(this);
     this.submitRound = this.submitRound.bind(this);
     this.getCourse = this.getCourse.bind(this);
+    this.updateDay = this.updateDay.bind(this);
+    this.updateMonth = this.updateMonth.bind(this);
+    this.updateYear = this.updateYear.bind(this);
+    this.handleWeatherChange = this.handleWeatherChange.bind(this);
+    this.handleWindChange = this.handleWindChange.bind(this);
 
     this.getCourses()
   }
@@ -86,11 +96,11 @@ class RoundForm extends Component {
     dataCopy.course = this.state.course.courseName;
     dataCopy.playerID = this.props.playerID;
     dataCopy.teamName = this.props.teamName;
-    dataCopy.timestamp = new Date();
+    dataCopy.timestamp = new Date(this.state.year, this.state.month, this.state.day, 0, 0, 0, 0);
+    dataCopy.weather = this.state.weather;
+    dataCopy.wind = this.state.wind;
 
     this.setState({ data: dataCopy });
-
-    console.log("round submited")
 
     const statsCalc = new CalculateStatistics(this.state.data);
     const roundStats = statsCalc.calculate();
@@ -138,7 +148,51 @@ class RoundForm extends Component {
     }
   }
 
+  updateMonth(val) {
+    if (val.target.value === null) {
+      this.setState({ month: null });
+    }
+    else {
+      this.setState({ month: val.target.value });
+    }
+  }
+
+  updateDay(val) {
+    if (val.target.value === null) {
+      this.setState({ day: null });
+    }
+    else {
+      this.setState({ day: val.target.value });
+    }
+  }
+
+  updateYear(val) {
+    if (val.target.value === null) {
+      this.setState({ year: null });
+    }
+    else {
+      this.setState({ year: val.target.value });
+    }
+  }
+
+  handleWeatherChange(e) {
+    this.setState({ weather: e });
+  }
+
+  handleWindChange(e) {
+    this.setState({ wind: e });
+  }
+
+  validation() {
+    if (this.state.courseName === null || this.state.day === null || this.state.month === null || this.state.year === null) {
+      return false;
+    }
+    return true;
+  }
+
   render() {
+
+    const year = new Date().getFullYear();
 
     const setupForm = (
       <div>
@@ -153,9 +207,108 @@ class RoundForm extends Component {
             <option value={null}>--</option>
             {this.state.courseList}
           </FormControl>
+          <ControlLabel>What day did you play?</ControlLabel>
+          <br />
+          <text>Month</text>
+          <FormControl
+            componentClass="select"
+            placeholder="..."
+            value={this.state.month}
+            onChange={(val) => this.updateMonth(val)}
+          >
+            <option value={null}>--</option>
+            <option value={"01"}>Jan (1)</option>
+            <option value={"02"}>Feb (2)</option>
+            <option value={"03"}>Mar (3)</option>
+            <option value={"04"}>Apr (4)</option>
+            <option value={"05"}>May (5)</option>
+            <option value={"06"}>Jun (6)</option>
+            <option value={"07"}>Jul (7)</option>
+            <option value={"08"}>Aug (8)</option>
+            <option value={"09"}>Sep (9)</option>
+            <option value={"10"}>Oct (10)</option>
+            <option value={"11"}>Nov (11)</option>
+            <option value={"12"}>Dec (12)</option>
+          </FormControl>
+          <text>Day</text>
+          <FormControl
+            componentClass="select"
+            placeholder="..."
+            value={this.state.day}
+            onChange={(val) => this.updateDay(val)}
+          >
+            <option value={null}>--</option>
+            <option value={"01"}>1</option>
+            <option value={"02"}>2</option>
+            <option value={"03"}>3</option>
+            <option value={"04"}>4</option>
+            <option value={"05"}>5</option>
+            <option value={"06"}>6</option>
+            <option value={"07"}>7</option>
+            <option value={"08"}>8</option>
+            <option value={"09"}>9</option>
+            <option value={"10"}>10</option>
+            <option value={"11"}>11</option>
+            <option value={"12"}>12</option>
+            <option value={"13"}>13</option>
+            <option value={"14"}>14</option>
+            <option value={"15"}>15</option>
+            <option value={"16"}>16</option>
+            <option value={"17"}>17</option>
+            <option value={"18"}>18</option>
+            <option value={"19"}>19</option>
+            <option value={"20"}>20</option>
+            <option value={"21"}>21</option>
+            <option value={"22"}>22</option>
+            <option value={"23"}>23</option>
+            <option value={"24"}>24</option>
+            <option value={"25"}>25</option>
+            <option value={"26"}>26</option>
+            <option value={"27"}>27</option>
+            <option value={"28"}>28</option>
+            <option value={"29"}>29</option>
+            <option value={"30"}>30</option>
+            <option value={"31"}>31</option>
+          </FormControl>
+          <text>Year</text>
+          <FormControl
+            componentClass="select"
+            placeholder="..."
+            value={this.state.year}
+            onChange={(val) => this.updateYear(val)}
+          >
+            <option value={null}>--</option>
+            <option value={year - 5}>{year - 5}</option>
+            <option value={year - 4}>{year - 4}</option>
+            <option value={year - 3}>{year - 3}</option>
+            <option value={year - 2}>{year - 2}</option>
+            <option value={year - 1}>{year - 1}</option>
+            <option value={year}>{year}</option>
+          </FormControl>
+          <div style={{ 'marginTop': 30}}>
+            <div>
+              <ControlLabel>What was the weather?</ControlLabel>
+            </div>
+            <ToggleButtonGroup name="weather-buttons" type="radio" value={this.state.weather} onChange={this.handleWeatherChange}>
+              <ToggleButton value={"Sunny"}>Sunny</ToggleButton>
+              <ToggleButton value={"Overcast"}>Overcast</ToggleButton>
+              <ToggleButton value={"Rainy"}>Rainy</ToggleButton>
+            </ToggleButtonGroup>
+          </div>
+          <div style={{ 'marginTop': 30}}>
+            <div>
+              <ControlLabel>How windy was it?</ControlLabel>
+            </div>
+            <ToggleButtonGroup name="wind-buttons" type="radio" value={this.state.wind} onChange={this.handleWindChange}>
+              <ToggleButton value={"Not windy"}>Not windy (0-5 mph)</ToggleButton>
+              <ToggleButton value={"Somewhat windy"}>Somewhat windy (5-20 mph)</ToggleButton>
+              <ToggleButton value={"Windy"}>Wind (20-30 mph)</ToggleButton>
+              <ToggleButton value={"Gale force"}>Gale force (30+ mph)</ToggleButton>
+            </ToggleButtonGroup>
+          </div>
         </Jumbotron>
         <Button
-          disabled={this.state.courseName === null}
+          disabled={!this.validation()}
           onClick={this.getCourse}
         >Next</Button>
       </div>

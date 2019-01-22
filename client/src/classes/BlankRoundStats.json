@@ -15,5 +15,7 @@
   "playerID": null,
   "course": null,
   "teamName": null,
-  "timestamp": null
+  "timestamp": null,
+  "weather": null,
+  "wind": null
 }
