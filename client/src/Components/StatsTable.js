@@ -50,66 +50,56 @@ class StatsTable extends Component {
         'Content-Type': 'application/json',
       }),
     }).then((response) => {
-      console.log('here', response)
       response.json().then((data) => {
-        console.log('data', data);
         this.setState({ playerIDs: data });
-        console.log("stat", this.state.playerIDs);
-      });
-    })
-    .then(() => {
-      console.log('here2')
-      console.log('playerids', this.state.playerIDs);
-      for (let i=0;i<this.state.playerIDs.length;i++) {
-        console.log('here2.5')
-        fetch(`/${this.state.playerIDs[i]}/stats`, {
-          method: 'GET',
-          headers: new Headers({
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          }),
-        }).then((response) => {
-          console.log('here3')
-          response.json().then((data) => {
-            console.log('here4')
-            const statsCalc = new CalculateOverallStatistics(data);
-            const playerAverages = statsCalc.calculate();
+      })
+      .then(() => {
+        for (let i=0;i<this.state.playerIDs.length;i++) {
+          fetch(`/${this.state.playerIDs[i]}/stats`, {
+            method: 'GET',
+            headers: new Headers({
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            }),
+          }).then((response) => {
+            response.json().then((data) => {
+              const statsCalc = new CalculateOverallStatistics(data);
+              const playerAverages = statsCalc.calculate();
 
-            fetch(`/${this.state.playerIDs[i]}/name`, {
-              method: 'GET',
-              headers: new Headers({
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-              }),
-            }).then((response2) => {
-              console.log('here5')
-              response2.json().then((data2) => {
-                const rows = this.state.coachRows;
-                console.log('name', data2.name);
-                console.log('playerAverages', playerAverages);
-                rows.push(
-                  <tr>
-                    <td>{data2.name}</td>
-                    <td>{playerAverages.score}</td>
-                    <td>{playerAverages.toPar}</td>
-                    <td>{playerAverages.firs}</td>
-                    <td>{playerAverages.proximity}</td>
-                    <td>{playerAverages.girs}</td>
-                    <td>{playerAverages.putts}</td>
-                    <td>{playerAverages.upAndDown}</td>
-                    <td>{playerAverages.shortsided}</td>
-                    <td>{playerAverages.sgpPro}</td>
-                    <td>{playerAverages.sgpScratch}</td>
-                    <td>{playerAverages.madeShort}</td>
-                  </tr>
-                );
-                this.setState({ coachRows: rows });
+              fetch(`/${this.state.playerIDs[i]}/name`, {
+                method: 'GET',
+                headers: new Headers({
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                }),
+              }).then((response2) => {
+                response2.json().then((data2) => {
+                  const rows = this.state.coachRows;
+                  rows.push(
+                    <tr>
+                      <td>{data2.name}</td>
+                      <td>{playerAverages.score}</td>
+                      <td>{playerAverages.toPar}</td>
+                      <td>{playerAverages.firs}</td>
+                      <td>{playerAverages.proximity}</td>
+                      <td>{playerAverages.girs}</td>
+                      <td>{playerAverages.putts}</td>
+                      <td>{playerAverages.upAndDown}</td>
+                      <td>{playerAverages.shortsided}</td>
+                      <td>{playerAverages.sgpPro}</td>
+                      <td>{playerAverages.sgpScratch}</td>
+                      <td>{playerAverages.madeShort}</td>
+                    </tr>
+                  );
+                  this.setState({ coachRows: rows });
+                });
               });
             });
-          });
-        })
-        .catch(err => console.log(err));
-      }
+          })
+          .catch(err => console.log(err));
+        }
+      })
+      .catch(err => console.log(err));
     })
     .catch(err => console.log(err));
   }
