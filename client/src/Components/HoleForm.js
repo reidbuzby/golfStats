@@ -322,7 +322,7 @@ class HoleForm extends Component {
           value={this.state.score}
           placeholder="Enter score"
           onChange={this.handleScoreChange}
-          style={{ width: 100, marginLeft: 460 }}
+          style={{ width: 100, marginLeft: 665 }}
         />
       </div>
     );

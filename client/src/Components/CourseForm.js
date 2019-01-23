@@ -113,7 +113,7 @@ class CourseForm extends Component {
             value={this.state.courseName}
             placeholder="Ralph Myre Golf Course"
             onChange={(val) => this.handleNameChange(val)}
-            style={{ width: 300, marginLeft: 500 }}
+            style={{ width: 300, marginLeft: 565 }}
           />
           <ControlLabel>What city is the course in:</ControlLabel>
           <FormControl
@@ -121,7 +121,7 @@ class CourseForm extends Component {
             value={this.state.courseCity}
             placeholder="Middlebury"
             onChange={(val) => this.handleCityChange(val)}
-            style={{ width: 300, marginLeft: 500 }}
+            style={{ width: 300, marginLeft: 565 }}
           />
           <ControlLabel>What state is the course in:</ControlLabel>
           <FormControl
@@ -129,7 +129,7 @@ class CourseForm extends Component {
             value={this.state.courseState}
             placeholder="Vermont"
             onChange={(val) => this.handleStateChange(val)}
-            style={{ width: 300, marginLeft: 500 }}
+            style={{ width: 300, marginLeft: 565 }}
           />
         </Jumbotron>
         <Button

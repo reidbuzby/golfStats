@@ -138,7 +138,6 @@ class StatsTable extends Component {
       }),
     }).then((response) => {
       response.json().then((data) => {
-        console.log('data', data);
         this.setState({ overallStats: data });
       })
     })
@@ -194,10 +193,8 @@ class StatsTable extends Component {
   generatePlayerRowsTable2() {
     this.pullAllPlayerStats();
 
-    console.log('overallStats', this.state.overallStats);
     const statsCalc = new CalculateOverallStatistics(this.state.overallStats);
     const teamAverages = statsCalc.calculate();
-    console.log('teamAverages', teamAverages);
 
     const statsCalc2 = new CalculateOverallStatistics(this.state.playerStats1);
     const playerAverages = statsCalc2.calculate();

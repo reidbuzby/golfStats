@@ -100,7 +100,7 @@ class CourseHoleForm extends Component {
           value={this.state.yardage}
           placeholder="Enter yardage"
           onChange={(val) => this.handleYardageChange(val)}
-          style={{ width: 250, marginLeft: 550 }}
+          style={{ width: 250, marginLeft: 590 }}
         />
       </div>
     );
