@@ -203,5 +203,6 @@
   "teamName": null,
   "timestamp": null,
   "weather": null,
-  "wind": null
+  "wind": null,
+  "notes": null
 }

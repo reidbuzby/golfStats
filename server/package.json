@@ -29,6 +29,7 @@
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "db-errors": "^0.1.0",
-    "mongodb": "^3.0.5"
+    "mongodb": "^3.0.5",
+    "node-mandrill": "1.0.1"
   }
 }

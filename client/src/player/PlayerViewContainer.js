@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import StatsTable from '../Components/StatsTable';
+import AnnouncementsTable from '../Components/AnnouncementsTable';
 
 class PlayerViewContainer extends Component {
 
@@ -29,8 +30,9 @@ class PlayerViewContainer extends Component {
 
     return (
       <div>
-        <StatsTable whoAmI='player' playerID={this.props.playerID}/>
+        <StatsTable whoAmI='player' playerID={this.props.playerID} />
         {buttons}
+        <AnnouncementsTable playerID={this.props.playerID} />
       </div>
     );
   }

@@ -26,9 +26,13 @@ class RoundForm extends Component {
       day: null,
       year: null,
       weather: null,
-      wind: null
+      wind: null,
+      notes: null,
+      width: 0,
+      height: 0
     };
 
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.nextHoleUpdate = this.nextHoleUpdate.bind(this);
     this.previousHoleUpdate = this.previousHoleUpdate.bind(this);
     this.submitRound = this.submitRound.bind(this);
@@ -38,8 +42,22 @@ class RoundForm extends Component {
     this.updateYear = this.updateYear.bind(this);
     this.handleWeatherChange = this.handleWeatherChange.bind(this);
     this.handleWindChange = this.handleWindChange.bind(this);
+    this.updateNotes = this.updateNotes.bind(this);
 
     this.getCourses()
+  }
+
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
   nextHoleUpdate(holeData) {
@@ -96,11 +114,10 @@ class RoundForm extends Component {
     dataCopy.course = this.state.course.courseName;
     dataCopy.playerID = this.props.playerID;
     dataCopy.teamName = this.props.teamName;
-    console.log('month', this.state.month);
     dataCopy.timestamp = new Date(this.state.year, this.state.month, this.state.day, 0, 0, 0, 0);
-    console.log('timestamp', dataCopy.timestamp);
     dataCopy.weather = this.state.weather;
     dataCopy.wind = this.state.wind;
+    dataCopy.notes = this.state.notes;
 
     this.setState({ data: dataCopy });
 
@@ -151,7 +168,7 @@ class RoundForm extends Component {
   }
 
   updateMonth(val) {
-    if (val.target.value === null) {
+    if (val.target.value === "--") {
       this.setState({ month: null });
     }
     else {
@@ -160,7 +177,7 @@ class RoundForm extends Component {
   }
 
   updateDay(val) {
-    if (val.target.value === null) {
+    if (val.target.value === "--") {
       this.setState({ day: null });
     }
     else {
@@ -169,11 +186,20 @@ class RoundForm extends Component {
   }
 
   updateYear(val) {
-    if (val.target.value === null) {
+    if (val.target.value === "--") {
       this.setState({ year: null });
     }
     else {
       this.setState({ year: val.target.value });
+    }
+  }
+
+  updateNotes(val) {
+    if (val.target.value === "") {
+      this.setState({ notes: null });
+    }
+    else {
+      this.setState({ notes: val.target.value });
     }
   }
 
@@ -186,7 +212,7 @@ class RoundForm extends Component {
   }
 
   validation() {
-    if (this.state.courseName === null || this.state.day === null || this.state.month === null || this.state.year === null) {
+    if (this.state.courseName === null || this.state.day === null || this.state.month === null || this.state.year === null || this.state.notes === null) {
       return false;
     }
     return true;
@@ -205,11 +231,12 @@ class RoundForm extends Component {
             placeholder="..."
             value={this.state.courseName}
             onChange={(val) => this.updateCourse(val)}
+            style={{ width: 400, marginLeft: (this.state.width / 2) - 200 }}
           >
             <option value={null}>--</option>
             {this.state.courseList}
           </FormControl>
-          <ControlLabel>What day did you play?</ControlLabel>
+          <ControlLabel style={{ marginTop: 30 }}>What day did you play?</ControlLabel>
           <br />
           <text>Month</text>
           <FormControl
@@ -217,6 +244,7 @@ class RoundForm extends Component {
             placeholder="..."
             value={this.state.month}
             onChange={(val) => this.updateMonth(val)}
+            style={{ width: 400, marginLeft: (this.state.width / 2) - 200 }}
           >
             <option value={null}>--</option>
             <option value={"00"}>Jan (1)</option>
@@ -238,6 +266,7 @@ class RoundForm extends Component {
             placeholder="..."
             value={this.state.day}
             onChange={(val) => this.updateDay(val)}
+            style={{ width: 400, marginLeft: (this.state.width / 2) - 200 }}
           >
             <option value={null}>--</option>
             <option value={"01"}>1</option>
@@ -278,6 +307,7 @@ class RoundForm extends Component {
             placeholder="..."
             value={this.state.year}
             onChange={(val) => this.updateYear(val)}
+            style={{ width: 400, marginLeft: (this.state.width / 2) - 200 }}
           >
             <option value={null}>--</option>
             <option value={year - 5}>{year - 5}</option>
@@ -304,9 +334,19 @@ class RoundForm extends Component {
             <ToggleButtonGroup name="wind-buttons" type="radio" value={this.state.wind} onChange={this.handleWindChange}>
               <ToggleButton value={"Not windy"}>Not windy (0-5 mph)</ToggleButton>
               <ToggleButton value={"Somewhat windy"}>Somewhat windy (5-20 mph)</ToggleButton>
-              <ToggleButton value={"Windy"}>Wind (20-30 mph)</ToggleButton>
+              <ToggleButton value={"Windy"}>Windy (20-30 mph)</ToggleButton>
               <ToggleButton value={"Gale force"}>Gale force (30+ mph)</ToggleButton>
             </ToggleButtonGroup>
+          </div>
+          <div style={{ 'marginTop': 30}}>
+            <ControlLabel>Enter some notes on your mental state before, during, or after the round. Or anything else you would like to note:</ControlLabel>
+            <FormControl
+              componentClass="textarea"
+              placeholder="Notes"
+              value={this.state.notes}
+              onChange={(val) => this.updateNotes(val)}
+              style={{ width: 800, height: 200, marginLeft: (this.state.width / 2) - 400 }}
+            />
           </div>
         </Jumbotron>
         <Button

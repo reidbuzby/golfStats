@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Table, Grid, Col, Row } from 'react-bootstrap';
+import { Table, Grid, Col, Row, Button, Well } from 'react-bootstrap';
 import CalculateOverallStatistics from '../statistics/CalculateOverallStatistics';
+import Popup from "reactjs-popup";
 
 // TODO: make this modifiable so coach can choose which stats they want to be main stats shown
 //       on their main screen
@@ -106,10 +107,10 @@ class StatsTable extends Component {
 
   compareRounds(a, b) {
     if (a.timestamp < b.timestamp) {
-      return -1;
+      return 1;
     }
     if (a.timestamp > b.timestamp) {
-      return 1;
+      return -1;
     }
     return 0;
   }
@@ -160,11 +161,25 @@ class StatsTable extends Component {
 
     let rows = [];
 
+    playerStats.sort(this.compareRounds);
+
     if (playerStats.length !== 0) {
       for (let i=0;i<playerStats.length;i++) {
         const round = playerStats[i];
 
-        // row: stat name, player average, team average
+        const popUp = (
+          <Popup trigger={<Button>View Round Notes</Button>} modal closeOnDocumentClick>
+            <span>
+              <div>
+                <header>
+                  <h1>Round Notes:</h1>
+                </header>
+                <Well>{round.notes}</Well>
+              </div>
+            </span>
+          </Popup>
+        );
+
         rows.push(
           <tr>
             <td>{this.convertDateToString(round.timestamp)}</td>
@@ -182,6 +197,7 @@ class StatsTable extends Component {
             <td>{round.data.madeShort}</td>
             <td>{round.weather}</td>
             <td>{round.wind}</td>
+            <td>{popUp}</td>
           </tr>
         );
       }
@@ -261,6 +277,7 @@ class StatsTable extends Component {
             <th>Make percentage inside 5 feet</th>
             <th>Weather conditions</th>
             <th>Wind conditions</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>

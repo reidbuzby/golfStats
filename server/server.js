@@ -2,6 +2,7 @@ const cors = require('cors');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { ObjectID, MongoError } = require('mongodb'); // eslint-disable-line no-unused-vars
+const mandrill = require('node-mandrill')('f9c138ed55c4636f0100129ae4711173-us20');
 
 const server = express();
 
@@ -13,6 +14,26 @@ const corsOptions = {
 
 server.use(cors(corsOptions));
 server.use(bodyParser.json());
+
+// POST request to send email notification
+server.post('/:coachID/email/notification', (request, response, next) => {
+  const emailBody = Object.assign(request.body.body);
+  mandrill('/messages/send', {
+    message: {
+        to: [{email: 'git@jimsc.com', name: 'Jim Rubenstein'}],
+        from_email: 'noreply@middleburygolfstats.com',
+        subject: "New Team Announcement",
+        text: emailBody
+    }
+  }, function(error, response)
+  {
+      //uh oh, there was an error
+      if (error) console.log( JSON.stringify(error) );
+
+      //everything's good, lets see what mandrill said
+      else console.log(response);
+  });
+});
 
 // POST request to create new course
 server.post('/courses', (request, response, next) => {
@@ -43,6 +64,44 @@ server.post('/teams', (request, response, next) => {
   const newRequest = Object.assign(request.body);
   db.collection('teams').insertOne(newRequest).then((result) => {
     response.send(result.ops[0]);
+  }, next);
+});
+
+// PUT request to add a new coach announcement
+server.put('/:coachID/announcement', (request, response, next) => {
+  const newAnnouncement = Object.assign(request.body);
+  db.collection('teams').findOne({ coachID: request.params.coachID }).then((result) => {
+    const announcements = result.announcements;
+    announcements.push(newAnnouncement);
+
+    db.collection('teams').findOneAndUpdate(
+      { coachID: request.params.coachID },
+      { $set: { announcements: announcements }},
+      { returnOriginal: false },
+    )
+    .then((result) => {
+      response.send(result.value);
+    }, next);
+  }, next);
+});
+
+// PUT request to add a new coach log
+server.put('/:coachID/log', (request, response, next) => {
+  const oid = ObjectID(request.params.coachID);
+  const query = { _id: oid };
+  const newLog = Object.assign(request.body);
+  db.collection('coaches').findOne(query).then((result) => {
+    const logs = result.logs;
+    logs.push(newLog);
+
+    db.collection('coaches').findOneAndUpdate(
+      { _id: oid },
+      { $set: { logs: logs }},
+      { returnOriginal: false },
+    )
+    .then((result) => {
+      response.send(result.value);
+    }, next);
   }, next);
 });
 
@@ -84,6 +143,46 @@ server.put('/teams/:teamName', (request, response, next) => {
           response.send(result.value);
         }, next);
     }, next);
+});
+
+// GET request to pull all coach logs
+server.get('/:coachID/logs', (request, response, next) => {
+  const oid = ObjectID(request.params.coachID);
+  const query = { _id: oid };
+
+  db.collection('coaches').findOne(query).then((result) => {
+    if (result) {
+      response.send(result.logs);
+    }
+    else {
+      response.sendStatus(403);
+    }
+  })
+});
+
+// GET request to pull all team announcements
+server.get('/:playerID/announcements', (request, response, next) => {
+  const oid = ObjectID(request.params.playerID);
+  const query = { _id: oid };
+
+  db.collection('players').findOne(query).then((result) => {
+    if (result) {
+      const teamName = result.playerTeam;
+      const overallStats = [];
+
+      db.collection('teams').findOne({ teamName: teamName }).then((result2) => {
+        if (result2) {
+          response.send(result2.announcements);
+        }
+        else {
+          response.sendStatus(403);
+        }
+      })
+    }
+    else {
+      response.sendStatus(403);
+    }
+  })
 });
 
 // GET request to pull all player ID's for a team based on coach ID
