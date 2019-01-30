@@ -23,6 +23,7 @@ class StatsTable extends Component {
   // whoAmI -- whether the user is a coach or player either 'player' or 'coach'
   // playerID -- OPTIONAL: UID of the player, if a player table is to be displayed. Undefined if showing coach table
   // coachID -- OPTIONAL: UID of the coach, if a coach table is to be displayed. Undefined if showing player table
+  // displayDetailTable(playerName) -- callback function to display a detailed stats report on given player
   constructor(props) {
     super(props);
 
@@ -30,7 +31,8 @@ class StatsTable extends Component {
       playerStats1: [],
       overallStats: [],
       playerIDs: [],
-      coachRows: []
+      coachRows: [],
+      detailCallbackPlayerName: null
     }
 
     this.generateCoachRows = this.generateCoachRows.bind(this);
@@ -39,6 +41,10 @@ class StatsTable extends Component {
     if (this.props.coachID) {
       this.generateCoachRows(this.props.coachID)
     }
+  }
+
+  callDetailCallback() {
+    this.props.displayDetailTable(this.state.detailCallbackPlayerName);
   }
 
   // TODO instead of pulling from hardcoded mainStats, pull from server.
@@ -78,7 +84,10 @@ class StatsTable extends Component {
                   const rows = this.state.coachRows;
                   rows.push(
                     <tr>
-                      <td>{data2.name}</td>
+                      <td onClick={() => {
+                        this.setState({ detailCallbackPlayerName: data2.name});
+                        this.callDetailCallback();
+                      }}>{data2.name}</td>
                       <td>{playerAverages.score}</td>
                       <td>{playerAverages.toPar}</td>
                       <td>{playerAverages.firs}</td>

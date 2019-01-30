@@ -114,7 +114,9 @@ class CreateNewUser extends Component {
           coachID : uid,
           teamName : createdCoach.teamName,
           players : [],
-          announcements : []
+          announcements : [],
+          playerEmails : [],
+          namesAndIds: []
         }
 
         fetchHelper('/teams', 'POST', newTeam).then((createdTeam) => {
@@ -141,7 +143,7 @@ class CreateNewUser extends Component {
     if (this.state.password === this.state.confirmPassword) {
       fetchHelper('/players', 'POST', newPlayer).then((createdPlayer) => {
         const uid = createdPlayer._id;
-        const newID = { playerID: uid };
+        const newID = { playerID: uid, email: createdPlayer.email, name: createdPlayer.fullName };
         fetchHelper(`/teams/${newPlayer.playerTeam}`, 'PUT', newID).then((added) => {
           console.log('Created new player and linked player to their team');
         }).catch(err => console.log(err)); // eslint-disable-line no-console

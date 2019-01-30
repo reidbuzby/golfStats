@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Table, Grid, Col, Row, Button, ControlLabel, FormControl, Navbar, Nav, NavItem } from 'react-bootstrap';
+import { Table, Grid, Col, Row, Button, ControlLabel, NavDropdown, FormControl, Navbar, Nav, NavItem } from 'react-bootstrap';
 import StatsTable from '../Components/StatsTable';
 import CourseForm from '../Components/CourseForm';
 import fetchHelper from '../serverHelpers/FetchHelper';
 import CoachLog from '../Components/CoachLog';
+import * as emailjs from 'emailjs-com';
+import PlayerDetailTable from '../Components/PlayerDetailTable';
 
 class CoachViewContainer extends Component {
 
@@ -17,8 +19,13 @@ class CoachViewContainer extends Component {
       announcement: null,
       width: 0,
       height: 0,
-      activeView: 1
+      activeView: 1,
+      players: [],
+      detailID: null,
+      detailame: null
     }
+
+    this.createDropdown();
 
     this.resetView = this.resetView.bind(this);
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -51,12 +58,84 @@ class CoachViewContainer extends Component {
     }
   }
 
+  getPlayers() {
+    fetch(`/teams/${this.props.coachID}/namesAndIds`, {
+      method: 'GET',
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }),
+    }).then((response) => {
+      response.json().then((data) => {
+        this.setState({ players: data });
+      })
+      .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
+  }
+
+  createDropdown() {
+    this.getPlayers();
+
+    const players = this.state.players;
+    let dropdown = [];
+
+    for (let i=0;i<players.length;i++) {
+      dropdown.push(
+        <NavItem
+          onClick={() => {this.setState({ viewMode: 'detail-stats', detailID: players[i].id, activeView: 1, detailName: players[i].name })}}
+        >{players[i].name}
+        </NavItem>
+      )
+    }
+
+    return dropdown;
+  }
+
+  sendAnnouncementEmails() {
+    fetch(`/${this.props.coachID}/team/emails`, {
+      method: 'GET',
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }),
+    }).then((response) => {
+      response.json().then((data) => {
+        const emails = data.emails;
+        const teamName = data.teamName;
+
+        const serviceID = "gmail";
+        const templateID = "template_z65styWQ";
+        const userID = "user_osqVZtCODFZfH3WUQdkIV";
+
+        for (let i=0;i<emails.length;i++) {
+          const params = {
+            send_to: emails[i],
+            team_name: teamName,
+            message_body: this.state.announcement
+          }
+
+          emailjs.send(serviceID, templateID, params, userID)
+            .then(function(){
+               console.log('Sent email to', emails[i]);
+             }, function(err) {
+               console.log('Failed');
+            });
+        }
+      })
+      .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
+  }
+
   submitAnnouncement() {
     const date = new Date();
     fetchHelper(`${this.props.coachID}/announcement`, 'PUT', { body: this.state.announcement, timestamp: date }).then((added) => {
       console.log('Uploaded new announcement');
+      this.sendAnnouncementEmails();
+      alert('Sent Announcement Successfully');
     }).catch(err => console.log(err)); // eslint-disable-line no-console
-    alert('Sent Announcement Successfully');
+
   }
 
   cancelAnnouncement() {
@@ -74,9 +153,11 @@ class CoachViewContainer extends Component {
         <Navbar>
           <Navbar.Brand>CollegeGolfStats</Navbar.Brand>
             <Nav activeKey={ this.state.activeView }>
-              <NavItem eventKey={1} onClick={() => {this.setState({ viewMode: 'team-stats', activeView: 1 })}}>
-                Team Stats
-              </NavItem>
+              <NavDropdown eventKey={1} title="Team Stats">
+                <NavItem onClick={() => {this.setState({ viewMode: 'team-stats', activeView: 1 })}}>Overall Stats</NavItem>
+                {this.createDropdown()}
+              </NavDropdown>
+
               <NavItem eventKey={2} onClick={() => {this.setState({ viewMode: 'announcements', activeView: 2 })}}>
                 Announcements
               </NavItem>
@@ -97,7 +178,7 @@ class CoachViewContainer extends Component {
         return (
           <div>
             {headerBar}
-            <StatsTable whoAmI='coach' coachID={this.props.coachID} style={{ marginLeft: 7, marginRight: 7 }}/>
+            <StatsTable whoAmI='coach' displayDetailTable={this.displayDetailTable} coachID={this.props.coachID} style={{ marginLeft: 7, marginRight: 7 }}/>
           </div>
         );
 
@@ -136,6 +217,14 @@ class CoachViewContainer extends Component {
             <CourseForm successCallback={this.resetView}/>
           </div>
         );
+      case 'detail-stats':
+        return (
+          <div>
+            {headerBar}
+            <text>{this.state.detailName}</text>
+            <PlayerDetailTable playerID={this.state.detailID} />
+          </div>
+        )
     }
   }
 

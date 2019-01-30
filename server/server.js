@@ -15,26 +15,6 @@ const corsOptions = {
 server.use(cors(corsOptions));
 server.use(bodyParser.json());
 
-// POST request to send email notification
-server.post('/:coachID/email/notification', (request, response, next) => {
-  const emailBody = Object.assign(request.body.body);
-  mandrill('/messages/send', {
-    message: {
-        to: [{email: 'git@jimsc.com', name: 'Jim Rubenstein'}],
-        from_email: 'noreply@middleburygolfstats.com',
-        subject: "New Team Announcement",
-        text: emailBody
-    }
-  }, function(error, response)
-  {
-      //uh oh, there was an error
-      if (error) console.log( JSON.stringify(error) );
-
-      //everything's good, lets see what mandrill said
-      else console.log(response);
-  });
-});
-
 // POST request to create new course
 server.post('/courses', (request, response, next) => {
   const newCourse = Object.assign(request.body);
@@ -127,22 +107,41 @@ server.put('/:playerID/newRound', (request, response, next) => {
 
 // PUT request to add player id to linked team
 server.put('/teams/:teamName', (request, response, next) => {
-  const newID = Object.assign(request.body);
+  const newPlayer = Object.assign(request.body);
   db.collection('teams').findOne({ teamName: request.params.teamName })
     .then((result) => {
       const playersList = result.players;
-      playersList.push(newID.playerID);
+      playersList.push(newPlayer.playerID);
+
+      const playerEmails = result.playerEmails;
+      playerEmails.push(newPlayer.email);
+
+      const namesAndIds = result.namesAndIds;
+      namesAndIds.push({ name: newPlayer.name, id: newPlayer.playerID });
 
       db.collection('teams') // eslint-disable-line no-undef
         .findOneAndUpdate(
           { teamName: request.params.teamName },
-          { $set: { players: playersList } },
+          { $set: { players: playersList, playerEmails: playerEmails, namesAndIds: namesAndIds } },
           { returnOriginal: false },
         )
         .then((result) => {
           response.send(result.value);
         }, next);
     }, next);
+});
+
+// GET request to pull team email list
+server.get('/:coachID/team/emails', (request, response, next) => {
+  const query = { coachID: request.params.coachID };
+  db.collection('teams').findOne(query).then((result) => {
+    if (result) {
+      response.send({ emails: result.playerEmails, teamName: result.teamName });
+    }
+    else {
+      response.sendStatus(403);
+    }
+  });
 });
 
 // GET request to pull all team names
@@ -153,8 +152,9 @@ server.get('/teams', (request, response, next) => {
       teamNames.push(documents[i].teamName);
     }
     response.send(teamNames);
-  })
-})
+  });
+});
+
 
 // GET request to pull all coach logs
 server.get('/:coachID/logs', (request, response, next) => {
@@ -296,6 +296,19 @@ server.get('/:playerID/stats', (request, response, next) => {
   });
 });
 
+// GET request to pull player names and ids
+server.get('/teams/:coachID/namesAndIds', (request, response, next) => {
+  const query = { coachID: request.params.coachID };
+  db.collection('teams').findOne(query).then((result) => {
+    if (result) {
+      response.send(result.namesAndIds);
+    }
+    else {
+      response.sendStatus(403);
+    }
+  });
+});
+
 // GET request to pull a user's name
 server.get('/:playerID/name', (request, response, next) => {
   const oid = ObjectID(request.params.playerID);
@@ -315,7 +328,6 @@ server.get('/:playerID/name', (request, response, next) => {
 // GET request to pull all courses
 server.get('/courses', (request, response, next) => {
   db.collection('courses').find({}).toArray().then((result) => {
-    console.log(result);
     if (result) {
       response.send(result);
     }

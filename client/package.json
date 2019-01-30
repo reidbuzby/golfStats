@@ -43,7 +43,8 @@
     "eslint-plugin-jsx-a11y": "^6.2.0",
     "eslint-plugin-react": "^7.12.4",
     "react-native": "0.55.4",
-    "react-test-renderer": "^16.2.0"
+    "react-test-renderer": "^16.2.0",
+    "emailjs-com": "2.3.2"
   },
   "optionalDependencies": {
     "fsevents": "*"
