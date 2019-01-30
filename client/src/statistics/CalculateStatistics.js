@@ -26,6 +26,7 @@ class CalculateStatistics {
     roundStats.timestamp = this.round.timestamp;
     roundStats.weather = this.round.weather;
     roundStats.wind = this.round.wind;
+    roundStats.notes = this.round.notes;
 
     return roundStats;
   }

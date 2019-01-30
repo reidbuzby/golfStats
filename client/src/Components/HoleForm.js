@@ -26,9 +26,12 @@ class HoleForm extends Component {
       putt3: this.props.putt3,
       putt4: this.props.putt4,
       putt5: this.props.putt5,
-      par: this.props.par
+      par: this.props.par,
+      width: 0,
+      height: 0
     };
 
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.handleTeeShotChange = this.handleTeeShotChange.bind(this);
     this.handleScoreChange = this.handleScoreChange.bind(this);
     this.handleApproachShotChange = this.handleApproachShotChange.bind(this);
@@ -58,6 +61,19 @@ class HoleForm extends Component {
       putt5: props.putt5,
       par: props.par
     });
+  }
+
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
   handleScoreChange(e) {
@@ -322,7 +338,7 @@ class HoleForm extends Component {
           value={this.state.score}
           placeholder="Enter score"
           onChange={this.handleScoreChange}
-          style={{ width: 100, marginLeft: 665 }}
+          style={{ width: 100, marginLeft: this.state.width/2 - 50 }}
         />
       </div>
     );
