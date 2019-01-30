@@ -62,6 +62,10 @@ class CoachLog extends Component {
     this.setState({ viewMode: 'main' });
   }
 
+  cancelLog() {
+    this.setState({ newLog: null, viewMode: 'main'});
+  }
+
   compareLogs(a, b) {
     if (a.timestamp < b.timestamp) {
       return 1;
@@ -81,22 +85,29 @@ class CoachLog extends Component {
         'Content-Type': 'application/json',
       }),
     }).then((response) => {
-      response.json().then((data) => {
+      console.log(response);
+      if (response.ok) {
+        response.json().then((data) => {
 
-        data.sort(this.compareLogs);
+          data.sort(this.compareLogs);
 
-        for (let i=0;i<data.length;i++) {
-          logs.push(
-            <div>
-              <text>{this.convertDateToString(data[i].timestamp)}</text>
-              <Well style={{ width: 800, marginLeft: (this.state.width / 2) - 400 }}>
-                {data[i].body}
-              </Well>
-            </div>
-          );
-        }
-        this.setState({ logs: logs });
-      });
+          for (let i=0;i<data.length;i++) {
+            logs.push(
+              <div>
+                <text>{this.convertDateToString(data[i].timestamp)}</text>
+                <Well style={{ width: 800, marginLeft: (this.state.width / 2) - 400 }}>
+                  {data[i].body}
+                </Well>
+              </div>
+            );
+          }
+          this.setState({ logs: logs });
+        });
+      }
+      else {
+        this.setState({ logs: null });
+      }
+
     });
   }
 
@@ -135,6 +146,10 @@ class CoachLog extends Component {
           onClick={() => this.submitLog()}
           disabled={(this.state.newLog === null)}
         >Submit Log</Button>
+        <Button
+          value='cancel-announcement'
+          onClick={() => this.cancelLog()}
+        >Cancel</Button>
       </div>
     );
 

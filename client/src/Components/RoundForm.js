@@ -4,7 +4,6 @@ import CalculateStatistics from '../statistics/CalculateStatistics';
 import fetchHelper from '../serverHelpers/FetchHelper';
 import { FormGroup, FormControl, ControlLabel, Button, ButtonGroup, ButtonToolbar, ToggleButtonGroup, ToggleButton, Jumbotron } from 'react-bootstrap';
 
-
 class RoundForm extends Component {
 
   // PROPS:
@@ -44,7 +43,7 @@ class RoundForm extends Component {
     this.handleWindChange = this.handleWindChange.bind(this);
     this.updateNotes = this.updateNotes.bind(this);
 
-    this.getCourses()
+    this.getCourses();
   }
 
   componentDidMount() {

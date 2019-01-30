@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Grid, Col, Row, Button, ControlLabel, FormControl } from 'react-bootstrap';
+import { Table, Grid, Col, Row, Button, ControlLabel, FormControl, Navbar, Nav, NavItem } from 'react-bootstrap';
 import StatsTable from '../Components/StatsTable';
 import CourseForm from '../Components/CourseForm';
 import fetchHelper from '../serverHelpers/FetchHelper';
@@ -13,13 +13,13 @@ class CoachViewContainer extends Component {
     super(props);
 
     this.state = {
-      viewMode: 'main',
+      viewMode: 'team-stats',
       announcement: null,
       width: 0,
-      height: 0
+      height: 0,
+      activeView: 1
     }
 
-    this.addCourse = this.addCourse.bind(this);
     this.resetView = this.resetView.bind(this);
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
@@ -37,17 +37,9 @@ class CoachViewContainer extends Component {
     this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
-  addCourse() {
-    this.setState({ viewMode: 'new-course' });
-  }
-
-  addAnnouncement() {
-    this.setState({ viewMode: 'announcement' });
-  }
-
   resetView() {
     alert('Uploaded course successfully');
-    this.setState({ viewMode: 'main' });
+    this.setState({ viewMode: 'team-stats', activeView: 1 });
   }
 
   updateAnnouncement(val) {
@@ -64,44 +56,55 @@ class CoachViewContainer extends Component {
     fetchHelper(`${this.props.coachID}/announcement`, 'PUT', { body: this.state.announcement, timestamp: date }).then((added) => {
       console.log('Uploaded new announcement');
     }).catch(err => console.log(err)); // eslint-disable-line no-console
+    alert('Sent Announcement Successfully');
+  }
+
+  cancelAnnouncement() {
+    this.setState({ announcement: null, viewMode: 'main' });
+  }
+
+  exitCoach() {
     this.setState({ viewMode: 'main' });
   }
 
   render() {
 
-    const buttons = (
+    const headerBar = (
       <div>
-        <Button
-          value='add-course'
-          onClick={() => this.addCourse()}
-        >Add Course</Button>
-        <Button
-          value='new-announcement'
-          onClick={() => this.addAnnouncement()}
-        >New Announcement</Button>
+        <Navbar>
+          <Navbar.Brand>CollegeGolfStats</Navbar.Brand>
+            <Nav activeKey={ this.state.activeView }>
+              <NavItem eventKey={1} onClick={() => {this.setState({ viewMode: 'team-stats', activeView: 1 })}}>
+                Team Stats
+              </NavItem>
+              <NavItem eventKey={2} onClick={() => {this.setState({ viewMode: 'announcements', activeView: 2 })}}>
+                Announcements
+              </NavItem>
+              <NavItem eventKey={3} onClick={() => {this.setState({ viewMode: 'coach-log', activeView: 3 })}}>
+                Coach Log
+              </NavItem>
+              <NavItem eventKey={4} onClick={() => {this.setState({ viewMode: 'new-course', activeView: 4 })}}>
+                Add Courses
+              </NavItem>
+            </Nav>
+            <Button style={{ position: 'absolute', marginTop: 7, marginRight: 5}} onClick={this.props.logoutCallback}>Logout</Button>
+        </Navbar>
       </div>
     );
 
     switch (this.state.viewMode) {
-      case 'main':
+      case 'team-stats':
         return (
           <div>
-            <StatsTable whoAmI='coach' coachID={this.props.coachID}/>
-            {buttons}
-            <CoachLog coachID={this.props.coachID} />
+            {headerBar}
+            <StatsTable whoAmI='coach' coachID={this.props.coachID} style={{ marginLeft: 7, marginRight: 7 }}/>
           </div>
         );
 
-      case 'new-course':
+      case 'announcements':
         return (
           <div>
-            <CourseForm successCallback={this.resetView}/>
-          </div>
-        );
-
-      case 'announcement':
-        return (
-          <div>
+            {headerBar}
             <ControlLabel>Enter new team announcement here:</ControlLabel>
             <FormControl
               componentClass="textarea"
@@ -118,12 +121,19 @@ class CoachViewContainer extends Component {
           </div>
         );
 
-      case 'uploaded-course':
+      case 'coach-log':
         return (
           <div>
-            <header>
-              <h1>Uploaded course successfully</h1>
-            </header>
+            {headerBar}
+            <CoachLog coachID={this.props.coachID} />
+          </div>
+        );
+
+      case 'new-course':
+        return (
+          <div>
+            {headerBar}
+            <CourseForm successCallback={this.resetView}/>
           </div>
         );
     }

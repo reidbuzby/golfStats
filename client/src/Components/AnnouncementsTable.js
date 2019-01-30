@@ -82,9 +82,6 @@ class AnnouncementsTable extends Component {
     console.log(this.state.announcements);
     return (
       <div>
-        <header>
-          <h1>Team Announcements</h1>
-        </header>
         {this.state.announcements}
       </div>
     );

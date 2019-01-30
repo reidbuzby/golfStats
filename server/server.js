@@ -145,6 +145,17 @@ server.put('/teams/:teamName', (request, response, next) => {
     }, next);
 });
 
+// GET request to pull all team names
+server.get('/teams', (request, response, next) => {
+  db.collection('teams').find({}).toArray().then((documents) => {
+    let teamNames = [];
+    for (let i=0;i<documents.length;i++) {
+      teamNames.push(documents[i].teamName);
+    }
+    response.send(teamNames);
+  })
+})
+
 // GET request to pull all coach logs
 server.get('/:coachID/logs', (request, response, next) => {
   const oid = ObjectID(request.params.coachID);

@@ -13,8 +13,25 @@ class LoginMain extends Component {
     this.state = {
       user: null,
       email: null,
-      password: null
+      password: null,
+      width: 0,
+      height: 0
     }
+
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+  }
+
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
   handleNewUser() {
@@ -107,21 +124,42 @@ class LoginMain extends Component {
 
   render() {
 
+    const buttons = (
+      <div className="well" style={{ maxWidth: 400, margin: '0 auto 10px' }}>
+        <Button
+          value='add-course'
+          bsSize="large"
+          block
+          onClick={() => this.addCourse()}
+        >Add Course</Button>
+        <Button
+          value='new-announcement'
+          bsSize="large"
+          block
+          onClick={() => this.addAnnouncement()}
+        >New Announcement</Button>
+      </div>
+    );
+
     const loginMain = (
       <div>
-        <text>Are you a: </text>
-        <ButtonGroup>
+        <ControlLabel>Are you a: </ControlLabel>
+        <div className="well" style={{ maxWidth: 400, margin: '0 auto 10px' }}>
           <Button
             value="coach"
+            bsSize="large"
+            block
             onClick={() => this.handleIsCoach()}>
             Coach
           </Button>
           <Button
             value="player"
+            bsSize="large"
+            block
             onClick={() => this.handleIsPlayer()}>
             Player
           </Button>
-        </ButtonGroup>
+        </div>
       </div>
     );
 
@@ -134,6 +172,7 @@ class LoginMain extends Component {
             value={this.state.email}
             placeholder="Email"
             onChange={(val) => this.updateEmail(val)}
+            style={{ width: 400, marginLeft: this.state.width/2 - 200 }}
           />
           <ControlLabel>Password:</ControlLabel>
           <FormControl
@@ -141,16 +180,21 @@ class LoginMain extends Component {
             value={this.state.password}
             placeholder="Password"
             onChange={(val) => this.updatePassword(val)}
+            style={{ width: 400, marginLeft: this.state.width/2 - 200 }}
           />
         </FormGroup>
-        <Button
-          onClick={() => this.handleLogin()}
-          disabled={!(this.state.email != null && this.state.password != null)}>
-          Login
-        </Button>
-        <Button onClick={() => this.handleNewUser()}>
-          Create new user
-        </Button>
+        <div className="well" style={{ maxWidth: 400, margin: '0 auto 10px' }}>
+          <Button
+            onClick={() => this.handleLogin()}
+            block
+            disabled={!(this.state.email != null && this.state.password != null)}>
+            Login
+          </Button>
+          <Button block onClick={() => this.handleNewUser()}>
+            Create new user
+          </Button>
+        </div>
+
       </form>
     );
 

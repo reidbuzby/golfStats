@@ -13,9 +13,12 @@ class CourseForm extends Component {
       data: require('../classes/BlankCourse.json'),
       courseName: null,
       courseCity: null,
-      courseState: null
+      courseState: null,
+      width: 0,
+      height: 0
     };
 
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleStateChange = this.handleStateChange.bind(this);
     this.handleCityChange = this.handleCityChange.bind(this);
@@ -23,6 +26,19 @@ class CourseForm extends Component {
     this.nextHoleUpdate = this.nextHoleUpdate.bind(this);
     this.previousHoleUpdate = this.previousHoleUpdate.bind(this);
     this.submitCourse = this.submitCourse.bind(this);
+  }
+
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
   handleNameChange(val) {
@@ -113,7 +129,7 @@ class CourseForm extends Component {
             value={this.state.courseName}
             placeholder="Ralph Myre Golf Course"
             onChange={(val) => this.handleNameChange(val)}
-            style={{ width: 300, marginLeft: 565 }}
+            style={{ width: 400, marginLeft: this.state.width/2 - 200 }}
           />
           <ControlLabel>What city is the course in:</ControlLabel>
           <FormControl
@@ -121,7 +137,7 @@ class CourseForm extends Component {
             value={this.state.courseCity}
             placeholder="Middlebury"
             onChange={(val) => this.handleCityChange(val)}
-            style={{ width: 300, marginLeft: 565 }}
+            style={{ width: 400, marginLeft: this.state.width/2 - 200 }}
           />
           <ControlLabel>What state is the course in:</ControlLabel>
           <FormControl
@@ -129,7 +145,7 @@ class CourseForm extends Component {
             value={this.state.courseState}
             placeholder="Vermont"
             onChange={(val) => this.handleStateChange(val)}
-            style={{ width: 300, marginLeft: 565 }}
+            style={{ width: 400, marginLeft: this.state.width/2 - 200 }}
           />
         </Jumbotron>
         <Button

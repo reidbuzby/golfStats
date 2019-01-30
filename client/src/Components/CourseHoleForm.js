@@ -14,12 +14,28 @@ class CourseHoleForm extends Component {
     this.state = {
       hole: this.props.hole,
       par: this.props.par,
-      yardage: this.props.yardage
+      yardage: this.props.yardage,
+      width: 0,
+      height: 0
     }
 
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.handleParChange = this.handleParChange.bind(this);
     this.handleYardageChange = this.handleYardageChange.bind(this);
 
+  }
+
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
   componentWillReceiveProps(props) {
@@ -100,7 +116,7 @@ class CourseHoleForm extends Component {
           value={this.state.yardage}
           placeholder="Enter yardage"
           onChange={(val) => this.handleYardageChange(val)}
-          style={{ width: 250, marginLeft: 590 }}
+          style={{ width: 250, marginLeft: this.state.width/2 - 125 }}
         />
       </div>
     );

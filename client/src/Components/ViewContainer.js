@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Button, Navbar, Nav, NavDropdown, NavItem } from 'react-bootstrap';
 import LoginMain from '../login/LoginMain';
 import CoachViewContainer from '../coach/CoachViewContainer';
 import PlayerViewContainer from '../player/PlayerViewContainer';
@@ -13,15 +14,31 @@ class ViewContainer extends Component {
     this.state = {
       viewMode: 'login',
       userId: null,
-      teamName: null
+      teamName: null,
+      width: 0,
+      height: 0
     };
 
-    // this.inputRoundCallback = this.inputRoundCallback.bind(this);
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.updateViewCallback = this.updateViewCallback.bind(this);
     this.successCallback = this.successCallback.bind(this);
     this.loginSuccessCallback = this.loginSuccessCallback.bind(this);
     this.inputNewRoundCallback = this.inputNewRoundCallback.bind(this);
     this.submittedRoundCallback = this.submittedRoundCallback.bind(this);
+    this.logoutCallback = this.logoutCallback.bind(this);
+  }
+
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
   updateViewCallback(view) {
@@ -49,62 +66,76 @@ class ViewContainer extends Component {
     this.setState({ viewMode: 'player-view' });
   }
 
-  roundSuccessCallback() {
+  exitPlayer() {
+    this.setState({ viewMode: 'player-view' });
+  }
 
+  logoutCallback() {
+    this.setState({ viewMode: 'login' });
+  }
+
+  navBarSetup() {
+    let navs = []
+    for (let i=250;i<this.state.width;i+=50) {
+      navs.push(
+        <NavItem>
+        </NavItem>
+      );
+    }
+    return navs;
   }
 
   render() {
 
+    const headerBar = (
+      <div>
+        <Navbar>
+          <Navbar.Brand>CollegeGolfStats</Navbar.Brand>
+        </Navbar>
+      </div>
+    );
+
     const roundForm = (
       <div>
+        <Button value="exit" onClick={() => this.exitPlayer()} variant="primary" size="lg" style={{ position: 'absolute', top: 15, left: 15 }} >
+          Exit
+        </Button>
         <header>
           <h1>Golf Stats</h1>
         </header>
-        <RoundForm submittedRoundCallback={this.submittedRoundCallback} roundSuccessCallback={this.roundSuccessCallback} playerID={this.state.userId} teamName={this.state.teamName}/>
+        <RoundForm submittedRoundCallback={this.submittedRoundCallback} playerID={this.state.userId} teamName={this.state.teamName}/>
       </div>
     );
 
     const loginScreen = (
       <div>
-        <header>
-          <h1>Golf Stats</h1>
-        </header>
+        {headerBar}
         <LoginMain loginSuccessCallback={this.loginSuccessCallback} updateViewCallback={this.updateViewCallback}/>
       </div>
     );
 
     const coachView = (
       <div>
-        <header>
-          <h1>Golf Stats</h1>
-        </header>
-        <CoachViewContainer coachID={this.state.userId}/>
+        <CoachViewContainer logoutCallback={this.logoutCallback} coachID={this.state.userId}/>
       </div>
     );
 
     const playerView = (
       <div>
-        <header>
-          <h1>Golf Stats</h1>
-        </header>
-        <PlayerViewContainer inputNewRoundCallback={this.inputNewRoundCallback} playerID={this.state.userId} teamName={this.state.teamName} updateViewCallback={this.updateViewCallback}/>
+        <PlayerViewContainer logoutCallback={this.logoutCallback} inputNewRoundCallback={this.inputNewRoundCallback} playerID={this.state.userId} teamName={this.state.teamName} updateViewCallback={this.updateViewCallback}/>
       </div>
     );
 
     const createNewCoach = (
       <div>
-        <header>
-          <h1>Golf Stats</h1>
-        </header>
+        {headerBar}
         <CreateNewUser userType='coach' successCallback={this.successCallback}/>
       </div>
     );
 
     const createNewPlayer = (
       <div>
-        <header>
-          <h1>Golf Stats</h1>
-        </header>
+        {headerBar}
         <CreateNewUser userType='player' successCallback={this.successCallback}/>
       </div>
     );

@@ -235,93 +235,96 @@ class StatsTable extends Component {
 
     // TODO: change headers to the real stats
     const coachTable = (
-      <Table striped bordered condensed hover>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Scoring Average</th>
-            <th>Scoring Average to par</th>
-            <th>Fairways hit percentage</th>
-            <th>Average approach shot proximity (ft)</th>
-            <th>Greens in regulation percentage</th>
-            <th>Total putts</th>
-            <th>Up and down percentage</th>
-            <th>Average shortsided shots</th>
-            <th>Strokes gained putting (Compared to pros)</th>
-            <th>Strokes gained putting (Compared to scratch golfers)</th>
-            <th>Make percentage inside 5 feet</th>
-          </tr>
-        </thead>
-        <tbody>
-          {(this.props.coachID) ? this.state.coachRows : null}
-        </tbody>
-      </Table>
+      <div style={{ marginLeft: 20, marginRight: 20 }}>
+        <Table striped bordered condensed hover>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Scoring Average</th>
+              <th>Scoring Average to par</th>
+              <th>Fairways hit percentage</th>
+              <th>Average approach shot proximity (ft)</th>
+              <th>Greens in regulation percentage</th>
+              <th>Total putts</th>
+              <th>Up and down percentage</th>
+              <th>Average shortsided shots</th>
+              <th>Strokes gained putting (Compared to pros)</th>
+              <th>Strokes gained putting (Compared to scratch golfers)</th>
+              <th>Make percentage inside 5 feet</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(this.props.coachID) ? this.state.coachRows : null}
+          </tbody>
+        </Table>
+      </div>
     );
 
     const playerTable1 = (
-      <Table striped bordered condensed hover>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Course</th>
-            <th>Total score</th>
-            <th>Score to par</th>
-            <th>Fairways hit percentage</th>
-            <th>Average approach shot proximity (ft)</th>
-            <th>Greens in regulation percentage</th>
-            <th>Total putts</th>
-            <th>Up and down percentage</th>
-            <th>Total times you were shortsided</th>
-            <th>Strokes gained putting (Compared to pros)</th>
-            <th>Strokes gained putting (Compared to scratch golfers)</th>
-            <th>Make percentage inside 5 feet</th>
-            <th>Weather conditions</th>
-            <th>Wind conditions</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {(this.props.playerID) ? this.generatePlayerRowsTable1(this.props.playerID) : null}
-        </tbody>
-      </Table>
+      <div style={{ marginLeft: 20, marginRight: 20 }}>
+        <Table striped bordered condensed hover>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Course</th>
+              <th>Total score</th>
+              <th>Score to par</th>
+              <th>Fairways hit percentage</th>
+              <th>Average approach shot proximity (ft)</th>
+              <th>Greens in regulation percentage</th>
+              <th>Total putts</th>
+              <th>Up and down percentage</th>
+              <th>Total times you were shortsided</th>
+              <th>Strokes gained putting (Compared to pros)</th>
+              <th>Strokes gained putting (Compared to scratch golfers)</th>
+              <th>Make percentage inside 5 feet</th>
+              <th>Weather conditions</th>
+              <th>Wind conditions</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {(this.props.playerID) ? this.generatePlayerRowsTable1(this.props.playerID) : null}
+          </tbody>
+        </Table>
+      </div>
     );
 
     // TODO: Maybe have last year, 6 months, 3 months etc. for each stat?
     const playerTable2 = (
-      <Table striped bordered condensed hover>
-        <thead>
-          <tr>
-            <td>Stat</td>
-            <th>Your Average</th>
-            <th>Team Average</th>
-          </tr>
-        </thead>
-        <tbody>
-          {(this.props.playerID) ? this.generatePlayerRowsTable2() : null}
-        </tbody>
-      </Table>
+      <div style={{ marginLeft: 20, marginRight: 20 }}>
+        <Table striped bordered condensed hover>
+          <thead>
+            <tr>
+              <td>Stat</td>
+              <th>Your Average</th>
+              <th>Team Average</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(this.props.playerID) ? this.generatePlayerRowsTable2() : null}
+          </tbody>
+        </Table>
+      </div>
     );
 
     if (this.props.whoAmI === 'coach') {
       return coachTable;
     }
-    else if (this.props.whoAmI === 'player') {
+    else if (this.props.whoAmI === 'player1') {
       return (
         <div>
-          <Grid>
-            <Row>
-              <Col md={4}>
-                {playerTable2}
-              </Col>
-              <Col md={8}>
-                {playerTable1}
-              </Col>
-            </Row>
-          </Grid>
+          {playerTable1}
         </div>
       );
     }
-
+    else if (this.props.whoAmI === 'player2') {
+      return (
+        <div>
+          {playerTable2}
+        </div>
+      );
+    }
   }
 }
 

@@ -17,8 +17,28 @@ class CreateNewUser extends Component {
       teamName : null,
       password : null,
       confirmPassword : null,
-      playerTeam : null
+      playerTeam : null,
+      teams : null,
+      width: 0,
+      height: 0
     }
+
+    this.getTeams();
+
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+  }
+
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
   updateName(val) {
@@ -82,6 +102,7 @@ class CreateNewUser extends Component {
       email : this.state.email,
       teamName : this.state.teamName,
       password : this.state.password,
+      logs : []
     }
 
     if (this.state.password === this.state.confirmPassword) {
@@ -92,7 +113,8 @@ class CreateNewUser extends Component {
         const newTeam = {
           coachID : uid,
           teamName : createdCoach.teamName,
-          players : []
+          players : [],
+          announcements : []
         }
 
         fetchHelper('/teams', 'POST', newTeam).then((createdTeam) => {
@@ -132,6 +154,17 @@ class CreateNewUser extends Component {
     }
   }
 
+  getTeams() {
+    fetchHelper('/teams', 'GET').then((teamNames) => {
+      let options = [];
+      options.push(<option value={null}>--</option>);
+      for (let i=0;i<teamNames.length;i++) {
+        options.push(<option value={teamNames[i]}>{teamNames[i]}</option>);
+      }
+      this.setState({ teams: options });
+    }).catch(err => console.log(err));
+  }
+
 
   render() {
 
@@ -140,6 +173,7 @@ class CreateNewUser extends Component {
         <FormGroup controlId='new-coach'>
           <ControlLabel>Full Name:</ControlLabel>
           <FormControl
+            style={{ width: 400, marginLeft: this.state.width/2 - 200}}
             type="text"
             value={this.state.fullName}
             placeholder="John Smith"
@@ -147,6 +181,7 @@ class CreateNewUser extends Component {
           />
           <ControlLabel>E-mail:</ControlLabel>
           <FormControl
+            style={{ width: 400, marginLeft: this.state.width/2 - 200}}
             type="text"
             value={this.state.email}
             placeholder="golfer@middlebury.edu"
@@ -154,6 +189,7 @@ class CreateNewUser extends Component {
           />
           <ControlLabel>Enter Your Team Name:</ControlLabel>
           <FormControl
+            style={{ width: 400, marginLeft: this.state.width/2 - 200}}
             type="text"
             value={this.state.teamName}
             placeholder="Middlebury Mens Golf"
@@ -161,6 +197,7 @@ class CreateNewUser extends Component {
           />
           <ControlLabel>Password:</ControlLabel>
           <FormControl
+            style={{ width: 400, marginLeft: this.state.width/2 - 200}}
             type="text"
             value={this.state.password}
             placeholder="******"
@@ -168,6 +205,7 @@ class CreateNewUser extends Component {
           />
           <ControlLabel>Confirm Password:</ControlLabel>
           <FormControl
+            style={{ width: 400, marginLeft: this.state.width/2 - 200}}
             type="text"
             value={this.state.confirmPassword}
             placeholder="******"
@@ -188,6 +226,7 @@ class CreateNewUser extends Component {
         <FormGroup controlId='new-player'>
           <ControlLabel>Full Name:</ControlLabel>
           <FormControl
+            style={{ width: 400, marginLeft: this.state.width/2 - 200}}
             type="text"
             value={this.state.fullName}
             placeholder="John Smith"
@@ -195,6 +234,7 @@ class CreateNewUser extends Component {
           />
           <ControlLabel>E-mail:</ControlLabel>
           <FormControl
+            style={{ width: 400, marginLeft: this.state.width/2 - 200}}
             type="text"
             value={this.state.email}
             placeholder="golfer@middlebury.edu"
@@ -202,16 +242,17 @@ class CreateNewUser extends Component {
           />
           <ControlLabel>What team are you on?</ControlLabel>
           <FormControl
+            style={{ width: 400, marginLeft: this.state.width/2 - 200}}
             componentClass="select"
             placeholder="..."
             value={this.state.playerTeam}
             onChange={(val) => this.updatePlayerTeam(val)}
           >
-            <option value={null}>--</option>
-            <option value="Middlebury Mens Golf">Middlebury Mens Golf</option>
+            {this.state.teams}
           </FormControl>
           <ControlLabel>Password:</ControlLabel>
           <FormControl
+            style={{ width: 400, marginLeft: this.state.width/2 - 200}}
             type="text"
             value={this.state.password}
             placeholder="******"
@@ -219,6 +260,7 @@ class CreateNewUser extends Component {
           />
           <ControlLabel>Confirm Password:</ControlLabel>
           <FormControl
+            style={{ width: 400, marginLeft: this.state.width/2 - 200}}
             type="text"
             value={this.state.confirmPassword}
             placeholder="******"
