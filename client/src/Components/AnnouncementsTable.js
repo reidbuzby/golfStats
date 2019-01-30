@@ -81,7 +81,7 @@ class AnnouncementsTable extends Component {
 
     console.log(this.state.announcements);
     return (
-      <div>
+      <div style={{ marginBottom: 100 }}>
         {this.state.announcements}
       </div>
     );

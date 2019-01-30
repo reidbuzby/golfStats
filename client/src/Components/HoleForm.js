@@ -494,7 +494,7 @@ class HoleForm extends Component {
     );
 
     return (
-      <div>
+      <div style={{ marginBottom: 100 }}>
         <Jumbotron>
           {scoreInput}
           {(this.state.par === 3) ? null : teeShotButtons}

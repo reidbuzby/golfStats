@@ -122,9 +122,9 @@ class PlayerDetailTable extends Component {
   }
 
   render() {
-    
+
     return (
-      <div style={{ marginLeft: 20, marginRight: 20 }}>
+      <div style={{ marginLeft: 20, marginRight: 20, marginBottom: 100 }}>
         <Table striped bordered condensed hover>
           <thead>
             <tr>

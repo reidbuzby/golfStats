@@ -244,7 +244,7 @@ class StatsTable extends Component {
 
     // TODO: change headers to the real stats
     const coachTable = (
-      <div style={{ marginLeft: 20, marginRight: 20 }}>
+      <div style={{ marginLeft: 20, marginRight: 20, marginBottom: 100 }}>
         <Table striped bordered condensed hover>
           <thead>
             <tr>
@@ -270,7 +270,7 @@ class StatsTable extends Component {
     );
 
     const playerTable1 = (
-      <div style={{ marginLeft: 20, marginRight: 20 }}>
+      <div style={{ marginLeft: 20, marginRight: 20, marginBottom: 100 }}>
         <Table striped bordered condensed hover>
           <thead>
             <tr>
@@ -301,7 +301,7 @@ class StatsTable extends Component {
 
     // TODO: Maybe have last year, 6 months, 3 months etc. for each stat?
     const playerTable2 = (
-      <div style={{ marginLeft: 20, marginRight: 20 }}>
+      <div style={{ marginLeft: 20, marginRight: 20, marginBottom: 100 }}>
         <Table striped bordered condensed hover>
           <thead>
             <tr>

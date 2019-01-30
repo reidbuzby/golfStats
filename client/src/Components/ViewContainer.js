@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Button, Navbar, Nav, NavItem } from 'react-bootstrap';
+import { Button, Navbar, Nav, NavItem, Well } from 'react-bootstrap';
 import LoginMain from '../login/LoginMain';
 import CoachViewContainer from '../coach/CoachViewContainer';
 import PlayerViewContainer from '../player/PlayerViewContainer';
 import CreateNewUser from '../login/CreateNewUser';
 import RoundForm from '../Components/RoundForm';
+import Popup from "reactjs-popup";
+import Footer from '../Components/Footer';
 
 class ViewContainer extends Component {
 
@@ -111,18 +113,21 @@ class ViewContainer extends Component {
       <div>
         {headerBar}
         <LoginMain loginSuccessCallback={this.loginSuccessCallback} updateViewCallback={this.updateViewCallback}/>
+        <Footer />
       </div>
     );
 
     const coachView = (
       <div>
         <CoachViewContainer logoutCallback={this.logoutCallback} coachID={this.state.userId}/>
+        <Footer />
       </div>
     );
 
     const playerView = (
       <div>
         <PlayerViewContainer logoutCallback={this.logoutCallback} inputNewRoundCallback={this.inputNewRoundCallback} playerID={this.state.userId} teamName={this.state.teamName} updateViewCallback={this.updateViewCallback}/>
+        <Footer />
       </div>
     );
 
@@ -130,6 +135,7 @@ class ViewContainer extends Component {
       <div>
         {headerBar}
         <CreateNewUser userType='coach' successCallback={this.successCallback}/>
+        <Footer />
       </div>
     );
 
@@ -137,16 +143,7 @@ class ViewContainer extends Component {
       <div>
         {headerBar}
         <CreateNewUser userType='player' successCallback={this.successCallback}/>
-      </div>
-    );
-
-    // PLACEHOLDER FOR SUCCES OF INPUTED ROUND
-    const submitted = (
-      <div>
-        <header>
-          <h1>Golf Stats</h1>
-        </header>
-        <text>Round Submitted</text>
+        <Footer />
       </div>
     );
 
@@ -168,9 +165,6 @@ class ViewContainer extends Component {
 
       case 'input-new-round':
         return roundForm;
-
-      case 'submitted':
-        return submitted;
 
     }
   }

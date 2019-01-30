@@ -222,7 +222,7 @@ class RoundForm extends Component {
     const year = new Date().getFullYear();
 
     const setupForm = (
-      <div>
+      <div style={{ marginBottom: 100 }}>
         <Jumbotron>
           <ControlLabel>What course did you play?</ControlLabel>
           <FormControl
@@ -360,7 +360,7 @@ class RoundForm extends Component {
     }
 
     return (
-      <div>
+      <div style={{ marginBottom: 100 }}>
         <header>
           <h1>{this.state.course.courseName}</h1>
           <h2>Hole {this.state.hole} | Par {this.state.course.data[this.state.hole - 1].par}| {this.state.course.data[this.state.hole - 1].yardage} Yards</h2>

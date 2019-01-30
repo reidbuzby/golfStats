@@ -117,7 +117,7 @@ class CoachLog extends Component {
 
     if (this.state.viewMode === 'main') {
       return (
-        <div style={{ marginTop: 15 }}>
+        <div style={{ marginTop: 15, marginBottom: 100 }}>
           <header>
             <h1>Coach Log:</h1>
           </header>
