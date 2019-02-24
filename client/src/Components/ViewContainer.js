@@ -134,6 +134,7 @@ class ViewContainer extends Component {
     const createNewCoach = (
       <div>
         {headerBar}
+        <Button onClick={() => {this.setState({ viewMode: 'login' })}} style={{ position: 'absolute', left: 10, top: 60 }}>Back</Button>
         <CreateNewUser userType='coach' successCallback={this.successCallback}/>
         <Footer />
       </div>
@@ -142,6 +143,7 @@ class ViewContainer extends Component {
     const createNewPlayer = (
       <div>
         {headerBar}
+        <Button onClick={() => {this.setState({ viewMode: 'login' })}} style={{ position: 'absolute', left: 10, top: 60 }}>Back</Button>
         <CreateNewUser userType='player' successCallback={this.successCallback}/>
         <Footer />
       </div>

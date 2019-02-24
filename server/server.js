@@ -85,6 +85,26 @@ server.put('/:coachID/log', (request, response, next) => {
   }, next);
 });
 
+// PUT request to add a new player journal entry
+server.put('/:playerID/journal', (request, response, next) => {
+  const oid = ObjectID(request.params.playerID);
+  const query = { _id: oid };
+  const newLog = Object.assign(request.body);
+  db.collection('players').findOne(query).then((result) => {
+    const entries = result.journal;
+    entries.push(newLog);
+
+    db.collection('players').findOneAndUpdate(
+      { _id: oid },
+      { $set: { journal: entries }},
+      { returnOriginal: false },
+    )
+    .then((result) => {
+      response.send(result.value);
+    }, next);
+  }, next);
+});
+
 // PUT request to add round data to a player Object
 server.put('/:playerID/newRound', (request, response, next) => {
   const newRound = Object.assign(request.body);
@@ -164,6 +184,21 @@ server.get('/:coachID/logs', (request, response, next) => {
   db.collection('coaches').findOne(query).then((result) => {
     if (result) {
       response.send(result.logs);
+    }
+    else {
+      response.sendStatus(403);
+    }
+  })
+});
+
+// GET request to pull player journal entries
+server.get('/:playerID/journal', (request, response, next) => {
+  const oid = ObjectID(request.params.playerID);
+  const query = { _id: oid };
+
+  db.collection('players').findOne(query).then((result) => {
+    if (result) {
+      response.send(result.journal);
     }
     else {
       response.sendStatus(403);

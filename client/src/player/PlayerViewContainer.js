@@ -3,6 +3,7 @@ import { Button, Nav, Navbar, NavItem } from 'react-bootstrap';
 import RoundForm from '../Components/RoundForm';
 import StatsTable from '../Components/StatsTable';
 import AnnouncementsTable from '../Components/AnnouncementsTable';
+import PlayerJournal from '../player/PlayerJournal';
 
 class PlayerViewContainer extends Component {
 
@@ -46,6 +47,9 @@ class PlayerViewContainer extends Component {
               </NavItem>
               <NavItem eventKey={4} onClick={() => {this.setState({ viewMode: 'new-round', activeView: 4 })}}>
                 Input New Round
+              </NavItem>
+              <NavItem eventKey={5} onClick={() => {this.setState({ viewMode: 'journal', activeView: 5 })}}>
+                Journal
               </NavItem>
             </Nav>
             <Button style={{ position: 'absolute', marginTop: 7, marginRight: 5}} onClick={this.props.logoutCallback}>Logout</Button>
@@ -92,6 +96,14 @@ class PlayerViewContainer extends Component {
           <div>
             {headerBar}
             <RoundForm submittedRoundCallback={this.submittedRoundCallback} playerID={this.props.playerID} teamName={this.props.teamName}/>
+          </div>
+        );
+
+      case 'journal':
+        return (
+          <div>
+            {headerBar}
+            <PlayerJournal coach={false} playerID={this.props.playerID} />
           </div>
         );
     }

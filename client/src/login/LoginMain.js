@@ -207,6 +207,7 @@ class LoginMain extends Component {
     else if (this.state.user == 'player') {
       return (
         <div>
+          <Button onClick={() => {this.setState({ user: null })}} style={{ position: 'absolute', left: 10, top: 60 }}>Back</Button>
           <header>
             <h1>
             Player Login
@@ -221,6 +222,7 @@ class LoginMain extends Component {
     else if (this.state.user == 'coach') {
       return (
         <div>
+          <Button onClick={() => {this.setState({ user: null })}} style={{ position: 'absolute', left: 10, top: 60 }}>Back</Button>
           <header>
             <h1>
             Coach Login

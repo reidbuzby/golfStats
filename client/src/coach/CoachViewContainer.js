@@ -6,6 +6,7 @@ import fetchHelper from '../serverHelpers/FetchHelper';
 import CoachLog from '../Components/CoachLog';
 import * as emailjs from 'emailjs-com';
 import PlayerDetailTable from '../Components/PlayerDetailTable';
+import PlayerJournal from '../player/PlayerJournal';
 
 class CoachViewContainer extends Component {
 
@@ -221,10 +222,28 @@ class CoachViewContainer extends Component {
         return (
           <div>
             {headerBar}
-            <text>{this.state.detailName}</text>
+            <div>
+              <h3>{this.state.detailName}</h3>
+            </div>
+            <div>
+              <Button style={{ marginBottom: 15 }} onClick={() => {this.setState({ viewMode: 'detail-journal' })}}>View Player Journal</Button>
+            </div>
             <PlayerDetailTable playerID={this.state.detailID} />
           </div>
-        )
+        );
+      case 'detail-journal':
+        return (
+          <div>
+            {headerBar}
+            <div>
+              <h3>{this.state.detailName}</h3>
+            </div>
+            <div>
+              <Button style={{ marginBottom: 15 }} onClick={() => {this.setState({ viewMode: 'detail-stats' })}}>View Player Stats</Button>
+            </div>
+            <PlayerJournal coach={true} playerID={this.state.detailID} />
+          </div>
+        );
     }
   }
 

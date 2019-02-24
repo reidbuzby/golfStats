@@ -137,7 +137,8 @@ class CreateNewUser extends Component {
       email : this.state.email,
       playerTeam : this.state.playerTeam,
       password : this.state.password,
-      rounds : []
+      rounds : [],
+      journal : []
     }
 
     if (this.state.password === this.state.confirmPassword) {
@@ -200,7 +201,7 @@ class CreateNewUser extends Component {
           <ControlLabel>Password:</ControlLabel>
           <FormControl
             style={{ width: 400, marginLeft: this.state.width/2 - 200}}
-            type="text"
+            type="password"
             value={this.state.password}
             placeholder="******"
             onChange={(val) => this.updatePassword(val)}
@@ -208,7 +209,7 @@ class CreateNewUser extends Component {
           <ControlLabel>Confirm Password:</ControlLabel>
           <FormControl
             style={{ width: 400, marginLeft: this.state.width/2 - 200}}
-            type="text"
+            type="password"
             value={this.state.confirmPassword}
             placeholder="******"
             onChange={(val) => this.updateConfirmPassword(val)}
@@ -255,7 +256,7 @@ class CreateNewUser extends Component {
           <ControlLabel>Password:</ControlLabel>
           <FormControl
             style={{ width: 400, marginLeft: this.state.width/2 - 200}}
-            type="text"
+            type="password"
             value={this.state.password}
             placeholder="******"
             onChange={(val) => this.updatePassword(val)}
@@ -263,7 +264,7 @@ class CreateNewUser extends Component {
           <ControlLabel>Confirm Password:</ControlLabel>
           <FormControl
             style={{ width: 400, marginLeft: this.state.width/2 - 200}}
-            type="text"
+            type="password"
             value={this.state.confirmPassword}
             placeholder="******"
             onChange={(val) => this.updateConfirmPassword(val)}
