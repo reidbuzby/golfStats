@@ -14,7 +14,8 @@ class CoachLog extends Component {
       width: 0,
       height: 0,
       viewMode: 'main',
-      newLog: null
+      newLog: null,
+      search: null
     }
 
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -76,6 +77,25 @@ class CoachLog extends Component {
     return 0;
   }
 
+  handleSearchChange(val) {
+    if (val.target.value === '') {
+      this.setState({ search : null })
+    }
+    else {
+      this.setState({ search : val.target.value })
+    }
+  }
+
+  getLogsBySearch(logs, search) {
+    let cleanedLogs = []
+    for (let i=0;i<logs.length;i++) {
+      if (logs[i].body.includes(search)) {
+        cleanedLogs.push(logs[i]);
+      }
+    }
+    return cleanedLogs;
+  }
+
   getLogs() {
     let logs = [];
     fetch(`/${this.props.coachID}/logs`, {
@@ -88,6 +108,10 @@ class CoachLog extends Component {
       console.log(response);
       if (response.ok) {
         response.json().then((data) => {
+
+          if (this.state.search !== null) {
+            data = this.getLogsBySearch(data, this.state.search);
+          }
 
           data.sort(this.compareLogs);
 
@@ -121,6 +145,15 @@ class CoachLog extends Component {
           <header>
             <h1>Coach Log:</h1>
           </header>
+          <div style={{ marginBottom: 15 }}>
+            <ControlLabel>Search logs:</ControlLabel>
+            <FormControl
+              type="text"
+              value={this.state.search}
+              onChange={(val) => this.handleSearchChange(val)}
+              style={{ width: 250, marginLeft: this.state.width/2 - 125 }}
+            />
+          </div>
           <Button
             value='new-entry'
             onClick={() => this.addLog()}
