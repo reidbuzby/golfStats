@@ -87,6 +87,7 @@ class PlayerViewContainer extends Component {
         return (
           <div>
             {headerBar}
+            <h1>Announcements:</h1>
             <AnnouncementsTable playerID={this.props.playerID} />
           </div>
         );

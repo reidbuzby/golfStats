@@ -26,7 +26,7 @@ class CoachViewContainer extends Component {
       detailame: null,
       dropdown: []
     }
-    
+
     this.getPlayers();
 
     this.resetView = this.resetView.bind(this);
@@ -177,7 +177,7 @@ class CoachViewContainer extends Component {
     switch (this.state.viewMode) {
       case 'team-stats':
         return (
-          <div>
+          <div style={{ marginBottom: 100 }}>
             {headerBar}
             <StatsTable whoAmI='coach' displayDetailTable={this.displayDetailTable} coachID={this.props.coachID} style={{ marginLeft: 7, marginRight: 7 }}/>
           </div>
@@ -185,7 +185,7 @@ class CoachViewContainer extends Component {
 
       case 'announcements':
         return (
-          <div>
+          <div style={{ marginBottom: 100 }}>
             {headerBar}
             <ControlLabel>Enter new team announcement here:</ControlLabel>
             <FormControl
@@ -205,7 +205,7 @@ class CoachViewContainer extends Component {
 
       case 'coach-log':
         return (
-          <div>
+          <div style={{ marginBottom: 100 }}>
             {headerBar}
             <CoachLog coachID={this.props.coachID} />
           </div>
@@ -213,14 +213,14 @@ class CoachViewContainer extends Component {
 
       case 'new-course':
         return (
-          <div>
+          <div style={{ marginBottom: 100 }}>
             {headerBar}
             <CourseForm successCallback={this.resetView}/>
           </div>
         );
       case 'detail-stats':
         return (
-          <div>
+          <div style={{ marginBottom: 100 }}>
             {headerBar}
             <div>
               <h3>{this.state.detailName}</h3>
@@ -233,7 +233,7 @@ class CoachViewContainer extends Component {
         );
       case 'detail-journal':
         return (
-          <div>
+          <div style={{ marginBottom: 100 }}>
             {headerBar}
             <div>
               <h3>{this.state.detailName}</h3>
