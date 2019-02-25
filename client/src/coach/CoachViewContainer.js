@@ -23,10 +23,11 @@ class CoachViewContainer extends Component {
       activeView: 1,
       players: [],
       detailID: null,
-      detailame: null
+      detailame: null,
+      dropdown: []
     }
-
-    this.createDropdown();
+    
+    this.getPlayers();
 
     this.resetView = this.resetView.bind(this);
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -69,6 +70,7 @@ class CoachViewContainer extends Component {
     }).then((response) => {
       response.json().then((data) => {
         this.setState({ players: data });
+        this.createDropdown();
       })
       .catch(err => console.log(err));
     })
@@ -76,8 +78,6 @@ class CoachViewContainer extends Component {
   }
 
   createDropdown() {
-    this.getPlayers();
-
     const players = this.state.players;
     let dropdown = [];
 
@@ -90,7 +90,7 @@ class CoachViewContainer extends Component {
       )
     }
 
-    return dropdown;
+    this.setState({ dropdown: dropdown });
   }
 
   sendAnnouncementEmails() {
@@ -156,7 +156,7 @@ class CoachViewContainer extends Component {
             <Nav activeKey={ this.state.activeView }>
               <NavDropdown eventKey={1} title="Team Stats">
                 <NavItem onClick={() => {this.setState({ viewMode: 'team-stats', activeView: 1 })}}>Overall Stats</NavItem>
-                {this.createDropdown()}
+                {this.state.dropdown}
               </NavDropdown>
 
               <NavItem eventKey={2} onClick={() => {this.setState({ viewMode: 'announcements', activeView: 2 })}}>
