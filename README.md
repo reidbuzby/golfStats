@@ -1,3 +1,7 @@
+# College Golf Stats
+
+This project is a React application for handling personal and team golf statistics. Current version is deployed on: https://desktop-golf.herokuapp.com/
+
 # Project Skeleton Top-level
 
 This repository combines the client and server into a single repository that can be co-developed, tested and ultimately deployed to Heroku.
