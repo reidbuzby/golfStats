@@ -23,7 +23,7 @@
     "google-map-react": "^0.34.0",
     "google-maps": "^3.3.0",
     "google-maps-react": "^2.0.0",
-    "jest-localstorage-mock": "^2.4.0",
+    "jest-localstorage-mock": "^2.4.6",
     "prop-types": "^15.6.1",
     "rc-slider": "8.6.4",
     "react": "16.7.0",
