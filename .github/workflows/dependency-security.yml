@@ -1,13 +1,28 @@
-name: Example workflow using Snyk
-on: push
+name: dependency-security
+
+on:
+  pull_request:
+    branches:
+      - main
+
 jobs:
-  security:
-    runs-on: ubuntu-latest
+  build:
+    name: Build
+    runs-on: ubuntu-18.04
     steps:
-      - uses: actions/checkout@master
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_SECRET }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build an image from Dockerfile
+        run: |
+          docker build -t docker.io/my-organization/my-app:${{ github.sha }} .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
         with:
-          args: --all-projects
+          image-ref: "docker.io/my-organization/my-app:${{ github.sha }}"
+          format: "table"
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: "os,library"
+          severity: "CRITICAL,HIGH"
