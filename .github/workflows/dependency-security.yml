@@ -3,7 +3,7 @@ name: dependency-security
 on:
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   build:
