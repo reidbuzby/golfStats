@@ -25,7 +25,7 @@
     "nodemon": "^1.17.3"
   },
   "dependencies": {
-    "express": "^4.16.3",
+    "express": "^4.19.2",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "db-errors": "^0.1.0",
